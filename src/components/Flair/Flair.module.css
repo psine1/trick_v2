@@ -1,0 +1,114 @@
+.flair {
+    width: 25px;
+    height: 25px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0;
+    /*background-color: #FFB6F7;*/
+    border: 2px solid #FFB6F7;
+    border-radius: 100%;
+  /*  mix-blend-mode:difference;*/
+    z-index: 999999;
+    transition: width 0.35s, height 0.35s, background-color 0.35s;
+    display: flex;
+
+  }
+
+  .flair2 {
+    width: 5px;
+    height: 5px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0;
+
+    background-color: #FFB6F7;
+    border-radius: 100%;
+    z-index: 999999;
+    transition: width 0.35s, height 0.35s, background-color 0.35s;
+    display: flex;
+
+  }
+
+  .hovered {
+    
+    width: 65px;
+    height: 70px;
+    opacity: 1;
+    backdrop-filter: blur(1px);
+    background-color: #FFB6F700;
+    border: 2px solid #FFB6F700;
+
+
+  }
+
+  .fontFlair{
+    font-size: clamp(3rem, 4vw, 4rem); 
+  }
+
+  .text{
+    opacity: 0;
+    transition: opacity 0.75s;
+
+  }
+
+  .text {
+ /*   position: absolute;*/
+    font-family: 'nerisLight';
+    font-size: clamp(1rem, 1.3vw, 1.3rem); 
+    color: #FFFFFF;
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    height: auto;
+    align-self: center;
+    /*transform: translateY(50%);*/
+    opacity: 1;
+
+  }
+
+
+  @media (max-width: 760px) {
+
+    .flair {
+        width: 30px;
+        height: 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        background-color: #FFB6F7;
+        border-radius: 100%;
+    /*    mix-blend-mode: hard-light;*/
+        z-index: 999999;
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+      }
+
+      .flair2 {
+        width: 5px;
+        height: 5px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        opacity: 0;
+
+        background-color: #FFB6F7;
+        border-radius: 100%;
+        z-index: 999999;
+        transition: width 0.35s, height 0.35s, background-color 0.35s;
+        display: flex;
+    
+      }
+    
+
+  }
+
+

@@ -1,0 +1,71 @@
+.bgOpening {
+  background-image: url(/images/bgBenefits.svg);
+  /*background: linear-gradient(49.73deg, #02D0D9 4.37%, #3C76D1 25.44%, #7743CB 47.22%, #AB61F3 75.79%),
+linear-gradient(180deg, rgba(0, 0, 0, 0.8) 22.76%, rgba(0, 0, 0, 0) 75.61%),
+linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));*/
+background-color: #cccccc;
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: -1;
+    position: relative;
+
+}
+
+.bkgLogo {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 20%;
+  left: 65%;
+  background-repeat: no-repeat;
+  background-image: url(/images/logoOpening.svg);
+
+}
+
+
+.fontItem {
+  font-size: clamp(2.5rem, 1.875vw, 1.875rem);
+  font-family: 'nerisLight';
+
+}
+
+
+.row1 {
+  background-color: #F1F1F1;
+  border: 1px solid #000;
+}
+
+.row2 {
+  background-color: #490CAB0D;
+  border: 1px solid #000;
+}
+
+.bgNoJobOpening {
+  background-color: #F1F1F1;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.containerNoJobOpening {
+  position: relative;
+  align-items: center;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  height: 373px;
+}
+
+.spanNoJobOpening {
+  font-family: 'nerisLight';
+  font-size: 30px;
+  font-weight: 300;
+  line-height: 40.2px;
+  text-align: center;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}

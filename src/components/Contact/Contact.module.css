@@ -1,0 +1,87 @@
+.bgSections {
+  background-repeat: no-repeat;
+  object-fit: cover;
+  background-image: url('/images/bgContact.jpg');
+  background-size: cover;
+}
+
+.fixedContact {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  overflow: auto;
+  max-height: calc(100% - 0px);
+}
+
+
+.fixedContact::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.fixedContact::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fixedContact::-webkit-scrollbar-thumb {
+  background: #AB61F3;
+  border-radius: 4px;
+}
+
+.fixedContact::-webkit-scrollbar-thumb:hover {
+  background: #AB61F3;
+}
+
+
+.modalContent {
+  background: white;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  border-radius: 8px;
+}
+
+
+
+.svgIcon {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: #FFFFFF;
+  transform: scaleY(0);
+  transform-origin: center top;
+}
+
+.svgWrapper {
+  background: transparent;
+  padding: 0;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  margin-top: -1px;
+  margin-bottom: -1px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.p {
+  font-family: 'nerisLight';
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 30px;
+
+
+}
+
+.pSpan {
+  font-family: 'nerisLight';
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+
+}

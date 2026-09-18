@@ -1,0 +1,48 @@
+.accordionHeader{
+    font-size: clamp(1.625rem, 1.875vw, 1.875rem); 
+    font-family: 'nerisLight';
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 1rem 0rem 1rem 0rem;
+    display: block;
+    width: 600px;
+
+  }
+
+  .accordionInnerContent{
+    font-size: clamp(1rem, 1vw, 1rem); 
+    font-family: 'nerisLight';
+    
+  }
+
+
+
+  .row1{
+    background-color: #F1F1F1;    
+    border-bottom: 1px solid #000;
+  }
+  
+  .row2{
+    background-color: #490CAB0D;    
+    border-bottom: 1px solid #000;
+  }
+
+    
+  @media (max-width: 1025px) {
+
+    .accordionHeader {
+    
+      width: 400px;
+  }
+
+  }
+  @media (max-width: 760px) {
+
+    .accordionHeader{
+      width: 100%;
+  
+    }
+    
+
+  }
+

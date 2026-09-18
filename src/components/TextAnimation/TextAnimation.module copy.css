@@ -1,0 +1,70 @@
+.containerWrap{
+	width: 98vw;
+	height: auto;
+  margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+  background-color: #000000;  
+  clip-path: polygon( 99.936% 0.631%,99.936% 83.797%,99.936% 83.797%,99.932% 84.544%,99.918% 85.282%,99.897% 86.007%,99.867% 86.716%,99.829% 87.407%,99.783% 88.076%,99.73% 88.72%,99.669% 89.335%,99.6% 89.919%,99.525% 90.468%,98.519% 97.237%,98.519% 97.237%,98.438% 97.744%,98.351% 98.204%,98.259% 98.614%,98.163% 98.974%,98.064% 99.282%,97.961% 99.537%,97.856% 99.738%,97.748% 99.882%,97.638% 99.97%,97.527% 100%,67.015% 100%,61.518% 100%,36.219% 100%,31.006% 100%,0.209% 100%,0.209% 100%,0.185% 99.993%,0.161% 99.972%,0.137% 99.937%,0.115% 99.889%,0.093% 99.83%,0.072% 99.758%,0.052% 99.676%,0.034% 99.583%,0.016% 99.481%,0% 99.369%,0% 16.203%,0% 16.203%,0.004% 15.456%,0.017% 14.719%,0.039% 13.993%,0.069% 13.284%,0.107% 12.593%,0.153% 11.924%,0.206% 11.28%,0.267% 10.665%,0.335% 10.081%,0.411% 9.532%,1.417% 2.763%,1.417% 2.763%,1.499% 2.256%,1.585% 1.797%,1.677% 1.386%,1.772% 1.026%,1.872% 0.718%,1.975% 0.463%,2.08% 0.262%,2.188% 0.118%,2.298% 0.03%,2.409% 0%,33.205% 0%,38.418% 0%,38.418% 0%,69.214% 0%,69.215% 0%,99.726% 0%,99.726% 0%,99.751% 0.007%,99.775% 0.028%,99.799% 0.063%,99.821% 0.111%,99.843% 0.17%,99.864% 0.242%,99.884% 0.324%,99.902% 0.417%,99.92% 0.519%,99.936% 0.631% );
+  
+}
+
+
+.intro{
+  font-size: clamp(4rem, 8vw, 8rem); 
+  color: #FFFFFF;
+  line-height: 0.5;
+  padding: 0rem 0rem 0rem 0rem;
+  text-wrap: nowrap;
+}
+
+
+@keyframes slides {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.texts {
+  overflow: hidden;
+  padding: 30px 0px;
+  white-space: nowrap;
+  position: relative;
+}
+
+.texts:before, .texts:after {
+  position: absolute;
+  top: 0;
+  content: '';
+  width: 250px;
+  height: 100%;
+  z-index: 2;
+}
+
+.texts:before {
+  left: 0;
+  background: linear-gradient(to left, rgba(0,0,0,0), rgb(0, 0, 0));
+}
+
+.texts:after {
+  right: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0), rgb(0, 0, 0));
+}
+
+.textItems {
+  display: inline-block;
+  animation: 8s slides infinite linear;
+}
+
+
+.textItems p{
+  white-space: nowrap;
+  display: inline-block;
+  padding-left: 5rem;
+  padding-right: 5rem;
+
+}

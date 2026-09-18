@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# --- Archive.org / Wayback Machine ---
+User-agent: ia_archiver
+Disallow: /

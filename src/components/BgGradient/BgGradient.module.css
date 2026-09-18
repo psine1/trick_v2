@@ -1,0 +1,15 @@
+
+  .bgHeader {
+    position: absolute;
+    width: 100vw;
+    height: 300vh;
+    bottom: -15%;
+    left: 0px;
+    background-repeat: no-repeat;
+    object-fit: cover;
+    background-image: url('/images/bgGradient.svg'); 
+    background-size: cover;
+    background-position: 20%;
+   
+
+  }

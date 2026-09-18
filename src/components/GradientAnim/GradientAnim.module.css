@@ -1,0 +1,36 @@
+.gradientAnim {
+    width: 700px;
+    height: 700px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, #02D0D9 0%, #AB61F3 100%);
+    filter: blur(150px);
+    z-index: 0;
+  }
+
+  @media (max-width: 760px) {
+
+    .gradientAnim1 {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        background-color: #FFB6F7;
+        border-radius: 100%;
+    /*    mix-blend-mode: hard-light;*/
+        z-index: 999999;
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+      }
+
+
+  }
+
+

@@ -1,0 +1,28 @@
+.svgStyles {
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  pointer-events: none;
+}
+
+.stroke{
+  fill: none;
+  stroke: #000000;
+  stroke-miterlimit: 0;
+  stroke-width: 0.75px;
+  pointer-events: none;
+}
+
+
+@media (max-width: 900px) {
+  .stroke{
+    fill: none;
+    stroke: #000000;
+    stroke-miterlimit: 100;
+    stroke-width: 1;
+    pointer-events: none;
+  }
+
+}

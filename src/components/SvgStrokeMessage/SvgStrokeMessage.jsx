@@ -1,0 +1,24 @@
+import styles from './SvgStrokeMessage.module.css';
+
+const SvgStrokeMessage = (props) => (
+  <svg
+  className={`${styles.svgStyles}`}
+    version="1.1"
+    id="Capa_1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 543 250"  
+    preserveAspectRatio="none" // Permite que el SVG pierda sus proporciones
+    xmlSpace="preserve"
+    clipPathUnits="objectBoundingBox"
+    {...props}
+  >
+    <path
+      className={`${styles.stroke}`}
+      d="M541.2,1.5c0.2,0,0.3,0.2,0.3,0.3v232.3c0,2.1-0.8,4-2.3,5.5l-6.6,6.6c-1.5,1.5-3.4,2.3-5.4,2.3H1.8
+		c-0.2,0-0.3-0.2-0.3-0.3V15.8c0-2.1,0.8-4,2.3-5.5l6.6-6.6c1.5-1.5,3.4-2.3,5.4-2.3H541.2 M541.2,0.5H15.8c-2.3,0-4.5,0.9-6.2,2.6
+		L9.3,2.7l0.4,0.4L3.1,9.7L2.7,9.3l0.4,0.4c-1.6,1.6-2.6,3.9-2.6,6.2v232.3c0,0.7,0.6,1.3,1.3,1.3h525.3c2.3,0,4.5-0.9,6.2-2.6
+		l6.6-6.6c1.6-1.6,2.5-3.9,2.5-6.2V1.8C542.5,1.1,541.9,0.5,541.2,0.5L541.2,0.5z"/>
+  </svg>
+);
+export default SvgStrokeMessage;

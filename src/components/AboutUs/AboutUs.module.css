@@ -1,0 +1,24 @@
+.bgSection{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: -1;
+}
+
+.section {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.bkgLogo{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 10%;
+  left: 35%;
+  background-repeat: no-repeat;
+  background-image: url('/images/bgLogo.svg'); 
+
+}

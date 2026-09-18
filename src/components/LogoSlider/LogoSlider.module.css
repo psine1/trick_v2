@@ -1,0 +1,55 @@
+  @keyframes firstLoop {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-200%);
+    }
+  }
+  @keyframes loop {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+
+  .scrollContainer {
+   
+    --time: 40s;
+    --half-time: 20s; 
+
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'scroll-area';
+    
+  }
+
+  .scroll {
+    grid-area: scroll-area;
+    animation: loop var(--time) linear infinite;
+    transform: translateX(100%);
+    display: flex;
+
+    &[data-first] {
+      animation: firstLoop var(--time) linear forwards;
+      transform: translateX(0);
+    }
+
+    &[data-last] {
+      animation-delay: var(--half-time);
+    }
+
+  }
+
+  .fade {
+    background: linear-gradient(
+      90deg,
+      #fff,
+      transparent 30%,
+      transparent 70%,
+      #fff
+    );
+  }

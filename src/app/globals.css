@@ -1,0 +1,591 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+
+@font-face {
+  font-family: 'nerisLight';
+  src: url('/fonts/Neris-Light.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nerisBoldItalic';
+  src: url('/fonts/Neris-BoldItalic.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nerisSemiBold';
+  src: url('/fonts/Neris-SemiBold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nerisSemiBoldItalic';
+  src: url('/fonts/Neris-SemiBoldItalic.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nerisBlack';
+  src: url('/fonts/Neris-Black.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nerisBlackItalic';
+  src: url('/fonts/Neris-BlackItalic.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+/*
+
+@font-face {
+  font-family: 'nunitoRegular';
+  src:  url('/fonts/Nunito-Regular.woff') format('woff');
+  font-style: normal;
+  font-weight: normal;
+}
+
+
+@font-face {
+  font-family: 'Nunito Italic';
+  font-style: normal;
+  font-weight: normal;
+  src:  url('/fonts/Nunito-Italic.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito ExtraLight';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/Nunito-ExtraLight.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito ExtraLight Italic';
+  font-style: normal;
+  font-weight: normal;
+  src:  url('/fonts/Nunito-ExtraLightItalic.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito Light';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/Nunito-Light.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito Light Italic';
+  font-style: normal;
+  font-weight: normal;
+  src:  url('/fonts/Nunito-LightItalic.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito SemiBold';
+  font-style: normal;
+  font-weight: normal;
+  src:  url('/fonts/Nunito-SemiBold.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito SemiBold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/Nunito-SemiBoldItalic.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito Bold';
+  font-style: normal;
+  font-weight: normal;
+  src:  url('/fonts/Nunito-Bold.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito Bold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/Nunito-BoldItalic.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito ExtraBold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/Nunito-ExtraBold.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito ExtraBold Italic';
+  font-style: normal;
+  font-weight: normal;
+  src:  url('/fonts/Nunito-ExtraBoldItalic.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito Black';
+  font-style: normal;
+  font-weight: normal;
+  src:  url('/fonts/Nunito-Black.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'Nunito Black Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/Nunito-BlackItalic.woff') format('woff');
+}
+*/
+:root {
+
+  --font-primary: 'nerisLight, Arial, sans-serif';
+  --font-secundary: 'nerisBoldItalic, Arial, sans-serif';
+  --font-third: 'nerisSemiBold, Arial, sans-serif';
+  --font-size-base: 16px;
+  --font-size-large: 24px;
+  --font-size-small: 12px;
+
+  --rose-1: #C63AF8;
+  --rose-2: #FFB6F7;
+
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #AB61F3;
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #AB61F3;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  background-color: #FFFFFF;
+  overflow-x: hidden;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+
+/*Preloader*/
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.nerisLight {
+  font-family: 'nerisLight';
+}
+
+.nerisBoldItalic {
+  font-family: 'nerisBoldItalic';
+}
+
+.nerisSemiBold {
+  font-family: 'nerisSemiBold';
+}
+
+.nerisBlackItalic {
+  font-family: 'nerisBlackItalic';
+}
+
+.nerisBlack {
+  font-family: 'nerisBlack';
+}
+
+.fontInter {
+  font-family: "Inter", sans-serif;
+}
+
+
+/* text styles */
+
+.sectionName {
+  font-family: 'nerisLight';
+  font-size: clamp(1rem, 1.125vw, 1.125rem);
+  color: #FFFFFF;
+}
+
+.sectionName .highlight {
+  color: #FFB6F7;
+  font-weight: 600;
+}
+
+.title-300 {
+  font-family: 'nerisLight';
+  font-size: clamp(3.125rem, 5.625vw, 5.625rem);
+  font-style: normal;
+  font-weight: 300;
+  font-variant-caps: small-caps;
+  line-height: 0.7;
+}
+
+.title-600 {
+  font-family: 'nerisSemiBold';
+  font-size: clamp(3.125rem, 5.625vw, 5.625rem);
+  font-style: normal;
+  font-weight: 600;
+  font-variant-caps: all-small-caps;
+  line-height: 0.7;
+}
+
+.title-900 {
+  font-family: 'nerisBlack';
+  font-size: clamp(3.43rem, 5.625vw, 5.625rem);
+  font-style: normal;
+  font-weight: 900;
+  font-variant-caps: all-small-caps;
+  line-height: 0.85;
+}
+
+
+
+.text-gradient1 {
+  background: linear-gradient(90deg, #02D0D9 0.07%, #AB61F3 51.69%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient2 {
+  background: linear-gradient(50deg, #02D0D9 18.65%, #3C76D1 75.79%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-white {
+  color: #FFFFFF;
+}
+
+.text-violet {
+  color: #490CAB;
+}
+
+.text-purple {
+  color: #C63AF8;
+}
+
+.text-black {
+  color: #000000;
+}
+
+
+
+.bgViolet {
+  background-color: #AB61F3;
+}
+
+.fontSmallCaps {
+  font-variant: all-small-caps;
+}
+
+
+
+
+.swiper-pagination-bullet {
+  background-color: #ccc;
+  width: 12px;
+  height: 12px;
+  opacity: 1;
+  margin: 0 4px;
+  border-radius: 50%;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #d40511;
+  transform: scale(1.2);
+}
+
+
+
+/*Accordion*/
+.row1 {
+  background-color: #F1F1F1;
+  border-top: 1px solid #000;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.row1:hover {
+  background-color: #ffffff;
+  border-top: 1px solid #969696;
+}
+
+.row2 {
+  background-color: #490CAB0D;
+  border-top: 1px solid #000;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.row2:hover {
+  background-color: #ffffff;
+  border-top: 1px solid #969696;
+}
+
+/*Accordion*/
+
+
+.row1Panel {
+  background-color: #F1F1F1;
+  border-top: 1px solid #000;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.row2Panel {
+  background-color: #490CAB0D;
+  border-top: 1px solid #000;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+
+.scrollDirectionDown .navBar {
+  opacity: 0.8;
+  z-index: 999999;
+  /* transition: opacity 0.3s ease-in-out;*/
+}
+
+.scrollDirectionUp .navBar {
+  opacity: 1;
+  z-index: 999999;
+  /*  transition: opacity 0.3s ease-in-out;*/
+}
+
+
+.logoOut {
+  transform: translateX(-100px);
+  opacity: 0 !important;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+}
+
+/* Scroll hacia arriba */
+.logoIn {
+  transform: translateX(0);
+  opacity: 1 !important;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+}
+
+
+
+@media (min-width: 640px) {
+  .sm\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .sm\:gap-22 {
+    gap: 1rem;
+    row-gap: 1rem;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .md\:gap-22 {
+    gap: 1rem;
+    row-gap: 1rem;
+  }
+
+  
+  .md\:-mtb-24 {
+    margin-top: -5rem;
+    margin-bottom: 5rem;
+  }
+  .md\:-mt-32 {
+    margin-top: -8rem;
+  }
+  
+}
+
+@media (min-width: 1024px) {
+
+  .lg\:grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .lg\:gap-22 {
+    gap: 1rem;
+    row-gap: 1rem;
+  }
+}
+
+@media (min-width: 1280px) {
+
+  .xl\:grid-cols-8 {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .xl\:gap-22 {
+    gap: 11rem;
+    row-gap: 1rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .\32xl\:grid-cols-10 {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .\32xl\:gap-22 {
+    gap: 9rem;
+    row-gap: 1rem;
+  }
+
+}
+
+@media (min-width: 1980px) {
+  .\64xl\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .\64xl\:gap-22 {
+    gap: 9rem;
+  }
+}
+
+[type=file] {
+  visibility: hidden;
+  position: relative;
+  border-color: inherit;
+  border-width: 0;
+  border-radius: 0px 0px 29px 0px;
+  padding: 0px;
+  font-size: 100%;
+  line-height: inherit;
+  background-color: #FFF;
+  font-family: 'nerisLight';
+
+}
+
+[type=file]:focus {
+  outline: 1px auto inherit
+}
+
+input[type=file]::file-selector-button {
+  color: #fff;
+  background: #000;
+  font-family: 'nerisLight';
+  border: 1 solid #000;
+  font-weight: 500;
+  font-size: .875rem;
+  cursor: pointer;
+  padding: 1rem 5rem 5rem 2rem;
+  content: 'Select file';
+  margin-inline-start:2rem;
+  margin-inline-end:1rem;
+  clip-path: polygon(0% 32.917%, 0% 96.042%, 0% 96.042%, 0.009% 96.653%, 0.036% 97.232%, 0.079% 97.77%, 0.136% 98.262%, 0.207% 98.698%, 0.289% 99.072%, 0.382% 99.375%, 0.484% 99.602%, 0.593% 99.743%, 0.709% 99.792%, 93.74% 99.792%, 93.74% 99.792%, 94.023% 99.73%, 94.305% 99.547%, 94.583% 99.246%, 94.856% 98.832%, 95.123% 98.307%, 95.381% 97.677%, 95.63% 96.944%, 100.867% 96.112%, 89.09% 97.185%, 91.299% 94.167%, 98.898% 80.417%, 98.898% 80.417%, 99.09% 79.312%, 99.265% 78.128%, 99.422% 76.875%, 99.561% 75.56%, 99.68% 74.193%, 99.779% 72.782%, 99.858% 71.336%, 99.914% 69.863%, 99.949% 68.374%, 99.961% 66.875%, 99.961% 3.75%, 99.961% 3.75%, 99.951% 3.139%, 99.925% 2.56%, 99.882% 2.021%, 99.825% 1.53%, 99.754% 1.094%, 99.671% 0.72%, 99.579% 0.416%, 99.477% 0.19%, 99.367% 0.049%, 99.252% 0%, 6.22% 0%, 6.22% 0%, 5.937% 0.062%, 5.656% 0.245%, 5.378% 0.546%, 5.104% 0.96%, 4.838% 1.484%, 4.579% 2.115%, 4.331% 2.848%, 4.094% 3.68%, 3.87% 4.607%, 3.661% 5.625%, 1.063% 19.375%, 1.063% 19.375%, 0.871% 20.53%, 0.695% 21.743%, 0.538% 23.009%, 0.4% 24.322%, 0.281% 25.677%, 0.181% 27.07%, 0.103% 28.495%, 0.046% 29.948%, 0.012% 31.424%, 0% 32.917%);
+
+}
+
+input[type=file]::before {
+  font-weight: 600;
+    font-size: 18px;
+    background-color: #000;
+    font-family: 'nerisLight';
+    height: 100%;
+    content: 'Select file';
+    color: #FFF;
+    padding: 1rem 1rem 1rem 1rem;
+    display: inline-block;
+    clip-path: polygon(-1% 32.917%, 0% 96.042%, 0% 96.042%, 0.009% 96.653%, 0.036% 97.232%, 0.079% 97.77%, 0.136% 98.262%, 0.207% 98.698%, 0.289% 99.072%, 0.382% 99.375%, 0.484% 99.602%, 0.593% 99.743%, 0.709% 99.792%, 93.74% 99.792%, 93.74% 99.792%, 94.023% 99.73%, 94.305% 99.547%, 94.583% 99.246%, 94.856% 98.832%, 95.123% 98.307%, 95.381% 97.677%, 95.63% 96.944%, 100.867% 96.112%, 85.09% 97.185%, 88.299% 94.167%, 98.898% 80.417%, 98.898% 80.417%, 99.09% 79.312%, 99.265% 78.128%, 99.422% 76.875%, 99.561% 75.56%, 99.68% 74.193%, 99.779% 72.782%, 99.858% 71.336%, 99.914% 69.863%, 99.949% 68.374%, 99.961% 66.875%, 99.961% 3.75%, 99.961% 3.75%, 99.951% 3.139%, 99.925% 2.56%, 99.882% 2.021%, 99.825% 1.53%, 99.754% 1.094%, 99.671% 0.72%, 99.579% 0.416%, 99.477% 0.19%, 99.367% 0.049%, 99.252% 0%, 6.22% 0%, 6.22% 0%, 5.937% 0.062%, 5.656% 0.245%, 5.378% 0.546%, 5.104% 0.96%, 4.838% 1.484%, 4.579% 2.115%, 4.331% 2.848%, 4.094% 3.68%, 3.87% 4.607%, 3.661% 5.625%, 1.063% 19.375%, 1.063% 19.375%, 0.871% 20.53%, 0.695% 21.743%, 0.538% 23.009%, 0.4% 24.322%, 0.281% 25.677%, 0.181% 27.07%, 0.103% 28.495%, 0.046% 29.948%, 0.012% 31.424%, 0% 32.917%);
+    visibility: visible;
+    position: relative;
+}
+
+
+input[type="file"]::after {
+    content: attr(placeholder);
+    visibility: visible;
+    position: absolute;
+    left: 97px;
+    background-color: #FFF;
+    width: 100%;
+    display: inline-block;
+    margin: auto;
+    padding: 18px;
+    z-index: -1;
+}
+
+
+
+@media (max-width: 640px) {
+  input[type="file"]::after {
+    left: 93px;
+    width: 100%;
+  }
+
+}
+
+
+.md\:-mt-50 {
+  margin-top: -18rem;
+}

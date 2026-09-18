@@ -1,0 +1,111 @@
+
+
+.clipPath {
+    clip-path: polygon( 1.124% 100%,92.752% 100%,92.752% 100%,93.111% 99.939%,93.464% 99.759%,93.812% 99.463%,94.152% 99.052%,94.483% 98.53%,94.803% 97.9%,95.112% 97.164%,95.406% 96.325%,95.685% 95.386%,95.947% 94.349%,98.701% 82.554%,98.701% 82.554%,98.939% 81.447%,99.155% 80.273%,99.348% 79.035%,99.518% 77.742%,99.663% 76.399%,99.782% 75.013%,99.877% 73.589%,99.945% 72.134%,99.986% 70.655%,100% 69.157%,100% 38.095%,100% 38.095%,100% 38.018%,99.999% 37.941%,99.999% 37.864%,99.998% 37.788%,99.996% 37.712%,99.995% 37.636%,99.993% 37.561%,99.991% 37.486%,99.989% 37.411%,99.986% 37.337%,99.986% 37.337%,99.989% 37.186%,99.991% 37.035%,99.993% 36.884%,99.995% 36.733%,99.997% 36.582%,99.998% 36.431%,99.999% 36.279%,99.999% 36.128%,100% 35.976%,100% 35.824%,100% 4.762%,100% 4.762%,99.985% 3.989%,99.943% 3.257%,99.875% 2.574%,99.783% 1.95%,99.671% 1.395%,99.54% 0.919%,99.393% 0.532%,99.232% 0.243%,99.059% 0.062%,98.876% 0%,7.028% 0%,7.028% 0%,6.67% 0.061%,6.316% 0.241%,5.969% 0.537%,5.628% 0.948%,5.297% 1.47%,4.977% 2.1%,4.669% 2.836%,4.375% 3.675%,4.096% 4.614%,3.834% 5.651%,1.299% 16.507%,1.299% 16.507%,1.061% 17.613%,0.845% 18.788%,0.652% 20.025%,0.482% 21.318%,0.338% 22.661%,0.218% 24.048%,0.123% 25.471%,0.055% 26.926%,0.014% 28.405%,0% 29.903%,0% 61.905%,0% 61.905%,0% 61.95%,0% 61.995%,0% 62.04%,0.001% 62.084%,0.001% 62.129%,0.002% 62.173%,0.002% 62.218%,0.003% 62.262%,0.004% 62.306%,0.005% 62.35%,0.005% 62.35%,0.004% 62.439%,0.003% 62.527%,0.002% 62.616%,0.002% 62.704%,0.001% 62.793%,0.001% 62.882%,0% 62.97%,0% 63.059%,0% 63.148%,0% 63.236%,0% 95.238%,0% 95.238%,0.015% 96.011%,0.057% 96.743%,0.125% 97.426%,0.217% 98.05%,0.329% 98.605%,0.46% 99.081%,0.607% 99.468%,0.768% 99.757%,0.941% 99.938%,1.124% 100% );
+} 
+
+.path {
+    background-color: #490CAB;
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    padding: .1rem .1rem .09rem .09rem;
+    
+}
+
+.pathBorder {
+    background-color: #FFF;
+    width: 100%;
+    height: 100%;
+    align-content: center;
+    text-align: center;
+}
+
+.pathNotClipPath {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.pathBorderNotClipPath {
+    width: 100%;
+    height: 100%;
+    align-content: center;
+    text-align: center;
+}
+
+.pathBorder:hover {
+    background-color: #FFF;
+}
+
+
+.title {
+    font-family: 'nerisLight';
+    font-size: clamp(1rem, 1vw, 1rem);
+    text-transform: uppercase;
+    align-self: center;
+    justify-self: center;
+}
+
+.titleLink {
+  
+    letter-spacing: 0.9px;
+    width: 150px;
+    font-weight: 400;
+    color: #490CAB;
+    display: block;
+    line-height: 1.8;
+    padding-top: 9px;
+}
+
+.titleLinkClipPath {
+    letter-spacing: 0.9px;
+    width: 150px;
+    font-weight: 400;
+    color: #490CAB;
+    display: block;
+    line-height: 1.9;
+    padding-top: 6px;
+}
+
+
+
+
+
+.wrapCard {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+}
+
+.wrapStroke {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-color: #490CAB;
+    padding: 0.1rem 0.1rem 0.09rem 0.09rem;
+}
+
+.wrapStrokeHover {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-color: #490CAB;
+}
+
+.wrapStrokeSelectHover {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-color: #FFF;
+}
