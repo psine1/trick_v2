@@ -19,7 +19,7 @@ const AboutUs = ({ section }) => {
 
   const containerRef = useRef();
   const cardRefs = useRef([]);
-  const sectionNameRef = useRef();
+    const sectionNameRef = useRef(); 
   const textSection = useRef();
   const [sectionData, setSectionData] = useState({});
 
