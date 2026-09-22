@@ -15,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
 const AboutUs = ({ section }) => {
 
   const isMobile = useMediaQuery('(max-width: 900px)');
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const { paragraph, sectionName, numSection } = pageData[section];
 
 
@@ -54,14 +55,21 @@ const AboutUs = ({ section }) => {
       media.add(
         {
           isSmallViewport: '(max-width: 767px)',
+          isDesktop: '(min-width: 768px)',
           reduceMotion: '(prefers-reduced-motion: reduce)',
         },
         ({ conditions }) => {
           const { isSmallViewport, reduceMotion } = conditions;
-          const animatedElements = [sectionNameRef.current, textSection.current];
+          const animatedElements = [sectionNameRef.current, textSection.current].filter(Boolean);
 
           if (reduceMotion) {
-            gsap.set(animatedElements, { y: 0, autoAlpha: 1 });
+            gsap.set(animatedElements, {
+              x: 0,
+              y: 0,
+              rotation: 0,
+              autoAlpha: 1,
+              clearProps: 'transform',
+            });
             return;
           }
 
@@ -71,8 +79,7 @@ const AboutUs = ({ section }) => {
               trigger: containerRef.current,
               start: isSmallViewport ? 'top 88%' : 'top 78%',
               end: isSmallViewport ? 'top 58%' : 'top 45%',
-              scrub: isSmallViewport ? 0.3 : 0.7,
-              fastScrollEnd: true,
+              scrub: isSmallViewport ? 1 : 1.5,
               invalidateOnRefresh: true,
             },
           })
@@ -94,6 +101,17 @@ const AboutUs = ({ section }) => {
       return undefined;
     }
 
+    if (prefersReducedMotion) {
+      gsap.set(visibleCards, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        autoAlpha: 1,
+        clearProps: 'transform',
+      });
+      return () => gsap.killTweensOf(visibleCards);
+    }
+
     const ctx = gsap.context(() => {
       const timeline = gsap.timeline({
         defaults: { ease: 'power1.out' },
@@ -101,8 +119,7 @@ const AboutUs = ({ section }) => {
           trigger: visibleCards[0],
           start: 'top 92%',
           end: 'top 48%',
-          scrub: isMobile ? 0.3 : 0.7,
-          fastScrollEnd: true,
+          scrub: isMobile ? 1 : 1.5,
           invalidateOnRefresh: true,
         },
       });
@@ -112,9 +129,9 @@ const AboutUs = ({ section }) => {
         timeline.fromTo(
           card,
           {
-            x: direction * (isMobile ? 120 : 500),
+            x: direction * (isMobile ? 240 : 600),
             autoAlpha: 0,
-            rotation: direction * (isMobile ? 8 : 30),
+            rotation: direction * (isMobile ? 15 : 45),
           },
           {
             x: 0,
@@ -128,7 +145,7 @@ const AboutUs = ({ section }) => {
     }, containerRef);
 
     return () => ctx.revert();
-  }, [isMobile, sectionData.cards, sectionData.mobileCards]);
+  }, [isMobile, prefersReducedMotion, sectionData.cards, sectionData.mobileCards]);
 
 
   return (

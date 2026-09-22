@@ -22,6 +22,7 @@ const Header = () => {
       media.add(
         {
           isMobile: '(max-width: 767px)',
+          isDesktop: '(min-width: 768px)',
           reduceMotion: '(prefers-reduced-motion: reduce)',
         },
         ({ conditions }) => {
@@ -32,27 +33,33 @@ const Header = () => {
             text2Ref.current,
             text3Ref.current,
             btnRef.current,
-          ];
+          ].filter(Boolean);
 
           if (reduceMotion) {
-            gsap.set(animatedElements, { x: 0, y: 0, autoAlpha: 1, clearProps: 'transform' });
+            gsap.set(animatedElements, {
+              x: 0,
+              y: 0,
+              rotation: 0,
+              autoAlpha: 1,
+              clearProps: 'transform',
+            });
             return;
           }
 
           gsap.set(innerHeaderRef.current, { scale: 1, autoAlpha: 0, rotation: 0 });
-          gsap.set(text1Ref.current, { x: isMobile ? 80 : 180, autoAlpha: 0 });
-          gsap.set(text2Ref.current, { y: isMobile ? 80 : 160, autoAlpha: 0 });
-          gsap.set(text3Ref.current, { y: isMobile ? 80 : 160, autoAlpha: 0 });
+          gsap.set(text1Ref.current, { x: isMobile ? 140 : 500, autoAlpha: 0 });
+          gsap.set(text2Ref.current, { y: isMobile ? 140 : 500, autoAlpha: 0 });
+          gsap.set(text3Ref.current, { y: isMobile ? 140 : 500, autoAlpha: 0 });
           gsap.set(btnRef.current, { x: isMobile ? -60 : -100, autoAlpha: 0 });
 
           gsap.timeline({
-            defaults: { ease: 'power3.out' },
+            defaults: { duration: 0.75, ease: 'power2.out' },
           })
-            .to(innerHeaderRef.current, { duration: 0.55, scale: 1, rotation: 0, autoAlpha: 1 }, 0)
-            .to(text1Ref.current, { duration: 0.8, x: 0, autoAlpha: 1 }, 0.15)
-            .to(text2Ref.current, { duration: 0.8, y: 0, autoAlpha: 1 }, 0.38)
-            .to(text3Ref.current, { duration: 0.8, y: 0, autoAlpha: 1 }, 0.61)
-            .to(btnRef.current, { duration: 0.7, x: 0, autoAlpha: 1 }, 0.9);
+            .to(innerHeaderRef.current, { scale: 1, rotation: 0, autoAlpha: 1 }, 0)
+            .to(text1Ref.current, { x: 0, autoAlpha: 1 }, 0.75)
+            .to(text2Ref.current, { y: 0, autoAlpha: 1 }, 0.95)
+            .to(text3Ref.current, { y: 0, autoAlpha: 1 }, 1.15)
+            .to(btnRef.current, { x: 0, autoAlpha: 1 }, 1.9);
         },
       );
     }, headerRef);
