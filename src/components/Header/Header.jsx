@@ -1,18 +1,13 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import styles from './Header.module.css';
 import VideoIntro from '../VideoIntro/VideoIntro';
 import MainButton from '../MainButton/MainButton';
 
-import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 
-
-const Header = ({  }) => {
-
-
-  
-  const headerRef = useRef(); 
-  const innerHeaderRef = useRef(); 
+const Header = () => {
+  const headerRef = useRef();
+  const innerHeaderRef = useRef();
 
   const text1Ref = useRef(null);
   const text2Ref = useRef(null);
@@ -20,39 +15,52 @@ const Header = ({  }) => {
   const btnRef = useRef(null);
   const gradientRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const media = gsap.matchMedia();
 
-  
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
+      media.add(
+        {
+          isMobile: '(max-width: 767px)',
+          reduceMotion: '(prefers-reduced-motion: reduce)',
+        },
+        ({ conditions }) => {
+          const { isMobile, reduceMotion } = conditions;
+          const animatedElements = [
+            innerHeaderRef.current,
+            text1Ref.current,
+            text2Ref.current,
+            text3Ref.current,
+            btnRef.current,
+          ];
 
-      gsap.set(innerHeaderRef.current, {scale: 1, autoAlpha: 0, rotation: 0})
-      gsap.set(text1Ref.current, {x: 500, autoAlpha: 0})
-      gsap.set(text2Ref.current, {y: 500, autoAlpha: 0})
-      gsap.set(text3Ref.current, {y: 500, autoAlpha: 0})
-      gsap.set(btnRef.current, {x:-100, autoAlpha: 0})
+          if (reduceMotion) {
+            gsap.set(animatedElements, { x: 0, y: 0, autoAlpha: 1, clearProps: 'transform' });
+            return;
+          }
 
-      let tl = gsap.timeline({});
-    
-      tl
-      .to(innerHeaderRef.current, 0.75, { scale:1, rotation: 0, autoAlpha: 1, ease: "power2.out"}, "<")
-      .to(text1Ref.current, 0.75, { x: 0, autoAlpha: 1, ease: "power2.out"}, ">")
-      .to(text2Ref.current, 0.75, { y: 0, autoAlpha: 1, ease: "power2.out"}, "<+0.2")
-      .to(text3Ref.current, 0.75, { y: 0, autoAlpha: 1, ease: "power2.out"}, "<+0.2")
-      .to(btnRef.current, 0.75, { x: 0, autoAlpha: 1, ease: "power2.out"}, ">")
+          gsap.set(innerHeaderRef.current, { scale: 1, autoAlpha: 0, rotation: 0 });
+          gsap.set(text1Ref.current, { x: isMobile ? 80 : 180, autoAlpha: 0 });
+          gsap.set(text2Ref.current, { y: isMobile ? 80 : 160, autoAlpha: 0 });
+          gsap.set(text3Ref.current, { y: isMobile ? 80 : 160, autoAlpha: 0 });
+          gsap.set(btnRef.current, { x: isMobile ? -60 : -100, autoAlpha: 0 });
 
-
-
-
-
-    }, headerRef); 
+          gsap.timeline({
+            defaults: { ease: 'power3.out' },
+          })
+            .to(innerHeaderRef.current, { duration: 0.55, scale: 1, rotation: 0, autoAlpha: 1 }, 0)
+            .to(text1Ref.current, { duration: 0.8, x: 0, autoAlpha: 1 }, 0.15)
+            .to(text2Ref.current, { duration: 0.8, y: 0, autoAlpha: 1 }, 0.38)
+            .to(text3Ref.current, { duration: 0.8, y: 0, autoAlpha: 1 }, 0.61)
+            .to(btnRef.current, { duration: 0.7, x: 0, autoAlpha: 1 }, 0.9);
+        },
+      );
+    }, headerRef);
 
     return () => {
-      ctx.revert(); // cleanup! 
-
-    } 
-  
-  
-        
+      media.revert();
+      ctx.revert();
+    };
   }, []);
 
 
@@ -86,7 +94,7 @@ const Header = ({  }) => {
                                   colorStroke={'#FFF'}/>                        
                             </div>
                         </div> 
-                      <VideoIntro />                 
+                      <VideoIntro />
                     </div>
                   </div>
               </div> 

@@ -2,8 +2,13 @@ import { useEffect, useState } from 'react';
 
 const useIntersectionObserver = (sections) => {
   const [activeSection, setActiveSection] = useState('');
+  const sectionsKey = sections.join('|');
 
   useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') {
+      return undefined;
+    }
+
     const options = {
       root: null,
       rootMargin: '0px',
@@ -19,7 +24,8 @@ const useIntersectionObserver = (sections) => {
     }, options);
 
     // observo cada sección
-    sections.forEach((section) => {
+    const selectors = sectionsKey.split('|').filter(Boolean);
+    selectors.forEach((section) => {
       const sectionElement = document.querySelector(section);
       if (sectionElement) {
         observer.observe(sectionElement);
@@ -27,15 +33,9 @@ const useIntersectionObserver = (sections) => {
     });
 
     return () => {
-      // desconecto el observer cuando el componente se desmonte
-      sections.forEach((section) => {
-        const sectionElement = document.querySelector(section);
-        if (sectionElement) {
-          observer.unobserve(sectionElement);
-        }
-      });
+      observer.disconnect();
     };
-  }, [sections]);
+  }, [sectionsKey]);
 
   return activeSection;
 };

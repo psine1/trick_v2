@@ -1,16 +1,22 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import styles from './TextAnimation.module.css';
-import gsap from 'gsap';
 import { horizontalLoop } from '@/utils/gsapCustom';
 
 const TextAnimation = () => {
-  
-  useEffect(() => {
-    const scrollingText = gsap.utils.toArray('.rail p');
-    horizontalLoop(scrollingText, {
+  const railRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const scrollingText = railRef.current?.querySelectorAll('p') ?? [];
+    if (scrollingText.length === 0) {
+      return undefined;
+    }
+
+    const loop = horizontalLoop(scrollingText, {
       repeat: -1,
       speed: 4
     });
+
+    return () => loop.kill();
   }, []);
 
 
@@ -21,7 +27,7 @@ const TextAnimation = () => {
       <div data-element="containerText" className={`${styles.containerWrap}`}>
 
         <div className={`${styles.texts}`}>
-          <div className={`rail ${styles.textItems}`}>
+          <div ref={railRef} className={`rail ${styles.textItems}`}>
             <p> <span className={`${styles.intro} nerisLight fontSmallCaps`}> MAKING THE GAMES </span> <span className={`${styles.intro} nerisSemiBold fontSmallCaps text-gradient2`}>WE LIKE TO PLAY</span></p>
             <p><span className={`${styles.intro} nerisSemiBold fontSmallCaps`}> MAKING THE GAMES </span> <span className={`${styles.intro} nerisBlackItalic text-gradient1 fontSmallCaps`}>WE LIKE TO PLAY</span> </p>
             <p> <span className={`${styles.intro} nerisLight fontSmallCaps`}> MAKING THE GAMES </span> <span className={`${styles.intro} nerisSemiBold fontSmallCaps text-gradient2`}>WE LIKE TO PLAY</span></p>

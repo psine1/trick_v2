@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './CardServices2.module.css';
 import Image from 'next/image';
 import SvgStrokeCard from '../SvgStrokeCard/SvgStrokeCard';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { gsap } from 'gsap';
 
 const CardServices2 = ({title, content, imageSrc, innerCardText}) => {
@@ -31,8 +31,8 @@ const CardServices2 = ({title, content, imageSrc, innerCardText}) => {
     setShowHiddenElements(!showHiddenElements);
   };
 
-  useEffect(() => {
-
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
     animationShadowRef.current = gsap.timeline({ paused: true })
     .to(shadowStrokeRef.current, {
       x: 10,
@@ -57,9 +57,20 @@ const CardServices2 = ({title, content, imageSrc, innerCardText}) => {
  
 
 
-    let tl_ = gsap.timeline();
+    gsap.set([clickedCard.current, text1.current, text2.current], { autoAlpha: 0 });
+    }, cardNameRef);
+
+    return () => {
+      animationRef.current = null;
+      animationShadowRef.current = null;
+      ctx.revert();
+    };
+  }, []);
+
+  useEffect(() => {
+    const timeline = gsap.timeline();
     if (showHiddenElements) {      
-      tl_
+      timeline
       //.to(shadowStrokeRef.current, {x: 10,y: 15,duration: 0.3,ease: 'power2.out',})
       .to(clickedCard.current, { autoAlpha: 1, duration: 0.75, ease: "power3.inOut" })
       .to(buttonRef.current, { rotation: 45, duration: 0.75, ease: "power3.inOut" }, "<")
@@ -70,26 +81,28 @@ const CardServices2 = ({title, content, imageSrc, innerCardText}) => {
       
 
     } else {
-      tl_
+      timeline
       //.to(shadowStrokeRef.current, {x: 0,y: 0,duration: 0,ease: 'power2.out',})
       .to(clickedCard.current, {autoAlpha: 0, duration: 0.75, ease: "power3.inOut" })
       .to(buttonRef.current, { rotation: 0, duration: 0.75, ease: "power3.inOut" }, "<")
-      .to(buttonRef1.current, { rotation: 0, fill:"#transparent", duration: 0.75, ease: "power3.inOut" }, "<")
+      .to(buttonRef1.current, { rotation: 0, fill:"transparent", duration: 0.75, ease: "power3.inOut" }, "<")
       .to(text1.current, { autoAlpha: 0, y: 0,  duration: 0.75, ease: "power3.inOut" }, '<')
       .to(text2.current, { autoAlpha: 0, x: 0, duration: 0.75, ease: "power3.inOut" }, '<')
     }
+
+    return () => timeline.kill();
   }, [showHiddenElements]);
 
 
 
   const handleMouseEnter = () => {
-    animationRef.current.play();
-    animationShadowRef.current.play();
+    animationRef.current?.play();
+    animationShadowRef.current?.play();
   };
 
   const handleMouseLeave = () => {
-    animationRef.current.reverse();
-    animationShadowRef.current.reverse();
+    animationRef.current?.reverse();
+    animationShadowRef.current?.reverse();
   };
 
   
@@ -117,7 +130,7 @@ const CardServices2 = ({title, content, imageSrc, innerCardText}) => {
                 </div>
                 
                 <div className='justify-self-end'>
-                  <button ref={buttonColorRef} className="p-2 rounded-lg border border-black-400 text-black-400 hover:text-black-500 hover:border-black-500 mt-4">
+                  <button type="button" ref={buttonColorRef} className="p-2 rounded-lg border border-black-400 text-black-400 hover:text-black-500 hover:border-black-500 mt-4">
                     <svg ref={buttonRef} className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -150,7 +163,7 @@ const CardServices2 = ({title, content, imageSrc, innerCardText}) => {
                   
                   <div className='justify-self-end flex items-center justify-between'>    
                     <div>          
-                    <button className="p-2 rounded-lg bg-white border border-black-400 text-black-400 hover:text-black-500 hover:border-gray-500 mt-4">
+                    <button type="button" className="p-2 rounded-lg bg-white border border-black-400 text-black-400 hover:text-black-500 hover:border-gray-500 mt-4">
                       <svg ref={buttonRef1} className="w-6 h-6" fill="#FFFFFF" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
                       </svg>

@@ -1,21 +1,8 @@
-import React from 'react';
 import styles from './MainLink.module.css';
 import SvgStrokeCardAboutUs from '../SvgStrokeCardAboutUs/SvgStrokeCardAboutUs';
-
-import { useState, useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
 import Link from 'next/link';
 
 const MainLink = ({ title, isBorder = true, isLast,link,targetOp= "_self", onClick }) => {
-
-
-
-	useEffect(() => {
-
-
-	}, []);
-
-
 	return (
 		
 		 <Link href={link} passHref target={targetOp}>

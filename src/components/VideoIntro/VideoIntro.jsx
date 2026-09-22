@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styles from './VideoIntro.module.css';
+import useMediaQuery from '@/hooks/useMediaQuery';
 
 const VideoIntro = () => {
   const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -13,53 +13,31 @@ const VideoIntro = () => {
       return undefined;
     }
 
+    let isCancelled = false;
     videoElement.muted = true;
-    const playVideo = () => {
-      videoElement.play().catch(() => {
-        // iOS may require an explicit user gesture before playback.
-      });
-    };
-    playVideo();
+    videoElement.load();
 
-    const handlePlay = () => {
-      setIsPlaying(true);
+    const removePlaybackFallback = () => {
+      document.removeEventListener('pointerdown', playVideo);
     };
 
-    const handleSuspend = () => {
-      console.log('Video is suspended. Show play button.');
-    };
-
-    videoElement.addEventListener('play', handlePlay);
-    videoElement.addEventListener('suspend', handleSuspend);
-
-    const handleBodyClick = () => {
-      if (videoElement.paused || videoElement.ended) {
-        playVideo();
+    const playVideo = async () => {
+      try {
+        await videoElement.play();
+        removePlaybackFallback();
+      } catch {
+        if (!isCancelled) {
+          // Muted autoplay is normally allowed. This is a one-time fallback for restrictive webviews.
+          document.addEventListener('pointerdown', playVideo, { once: true, passive: true });
+        }
       }
     };
 
-    document.body.addEventListener('click', handleBodyClick);
-    document.body.addEventListener('touchstart', handleBodyClick, { passive: true });
+    playVideo();
 
     return () => {
-      videoElement.removeEventListener('play', handlePlay);
-      videoElement.removeEventListener('suspend', handleSuspend);
-      document.body.removeEventListener('click', handleBodyClick);
-      document.body.removeEventListener('touchstart', handleBodyClick);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    handleResize(); 
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
+      isCancelled = true;
+      removePlaybackFallback();
     };
   }, []);
 
@@ -77,8 +55,7 @@ const VideoIntro = () => {
           poster={isMobile ? '/videos/posterMob.jpg' : '/videos/poster.jpg'}
           autoPlay
         >
-          <source src="/videos/header-03-mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
-          <source src="/videos/header-03.mp4" type="video/mp4" />
+          <source src="/videos/header-03-mobile-2.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 

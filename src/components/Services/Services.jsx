@@ -23,30 +23,61 @@ const Services = ({section }) => {
 
 
   useLayoutEffect(() => {
+      const media = gsap.matchMedia();
       const ctx = gsap.context(() => {
-        let tl = gsap.timeline({ 
-          scrollTrigger: {
-            start: "-=100%",
-            end: "20%",
-            trigger: containerRef.current,
-            pin: false,
-            smooth: 10,
-            scrub: 2,
-            markers: false,
-            ease: "power1.out",
+        media.add(
+          {
+            isMobile: '(max-width: 767px)',
+            reduceMotion: '(prefers-reduced-motion: reduce)',
           },
-        });
-      
-        tl
-        .fromTo(sectionNameRef.current, {y: 100, autoAlpha: 0}, { y: 0, autoAlpha: 1, ease: "power1.out"}, "<")
-        .fromTo(textSection.current, {y: 50, autoAlpha: 0}, { y: 0, autoAlpha: 1, ease: "power1.out"}, "<+0.2")
-        .fromTo(cardRefs.current[1], {x: 800, autoAlpha: 0, rotation: 0}, { x: 0, autoAlpha: 1, transformOrigin: "100% 100%", rotation: 0, ease: "power1.out"}, "<")
-        .fromTo(cardRefs.current[0], {x: -800, autoAlpha: 0, rotation: 0}, { x: 0, autoAlpha: 1, transformOrigin: "0% 100%", rotation: 0, ease: "power1.out"}, "<")
+          ({ conditions }) => {
+            const { isMobile, reduceMotion } = conditions;
+            const cardsToAnimate = cardRefs.current.filter(Boolean);
+            const animatedElements = [sectionNameRef.current, textSection.current, ...cardsToAnimate];
 
-        ScrollTrigger.refresh();
+            if (reduceMotion) {
+              gsap.set(animatedElements, { x: 0, y: 0, rotation: 0, autoAlpha: 1 });
+              return;
+            }
+
+            const timeline = gsap.timeline({
+              defaults: { ease: 'power1.out' },
+              scrollTrigger: {
+                trigger: containerRef.current,
+                start: isMobile ? 'top 88%' : 'top 78%',
+                end: isMobile ? 'top 48%' : 'top 38%',
+                scrub: isMobile ? 0.35 : 0.8,
+                fastScrollEnd: true,
+                invalidateOnRefresh: true,
+              },
+            });
+
+            timeline
+              .fromTo(sectionNameRef.current, { y: 70, autoAlpha: 0 }, { y: 0, autoAlpha: 1 })
+              .fromTo(textSection.current, { y: 45, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }, '<+0.12');
+
+            cardsToAnimate.forEach((card, index) => {
+              const direction = index % 2 === 0 ? -1 : 1;
+              timeline.fromTo(
+                card,
+                { x: direction * (isMobile ? 120 : 600), autoAlpha: 0, rotation: 0 },
+                {
+                  x: 0,
+                  autoAlpha: 1,
+                  rotation: 0,
+                  transformOrigin: direction < 0 ? '0% 100%' : '100% 100%',
+                },
+                '<+0.08',
+              );
+            });
+          },
+        );
       }, containerRef);
 
-      return () => ctx.revert();
+      return () => {
+        media.revert();
+        ctx.revert();
+      };
     }, []);
     
 

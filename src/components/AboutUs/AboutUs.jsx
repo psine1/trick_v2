@@ -7,14 +7,15 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 import { pageData } from '@/app/data/data';
 import { db } from '@/firebase/firebase';
 import { getDocs, collection, query, where } from "firebase/firestore";
+import useMediaQuery from '@/hooks/useMediaQuery';
 
 gsap.registerPlugin(ScrollTrigger);
 
 
 const AboutUs = ({ section }) => {
 
-  const [isMobile, setIsMobile] = useState(false);
-  const { title, paragraph, num, sectionName, numSection, content, cards, classNameProp, mobileCards } = pageData[section];
+  const isMobile = useMediaQuery('(max-width: 900px)');
+  const { paragraph, sectionName, numSection } = pageData[section];
 
 
   const containerRef = useRef();
@@ -24,86 +25,110 @@ const AboutUs = ({ section }) => {
   const [sectionData, setSectionData] = useState({});
 
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchData = async () => {
       try {
         const queryCollection = query(collection(db, "sections"), where("numSection", "==", "02"));
         const querySnapshot = await getDocs(queryCollection);
         const itemsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        if (itemsData.length > 0) {
+        if (!isCancelled && itemsData.length > 0) {
           setSectionData(itemsData[0]);
         }
       } catch (error) {
-        console.error("Error fetching documents: ", error);
+        if (!isCancelled) {
+          console.error("Error fetching documents: ", error);
+        }
       }
     };
     fetchData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
+  useLayoutEffect(() => {
+    const media = gsap.matchMedia();
+    const ctx = gsap.context(() => {
+      media.add(
+        {
+          isSmallViewport: '(max-width: 767px)',
+          reduceMotion: '(prefers-reduced-motion: reduce)',
+        },
+        ({ conditions }) => {
+          const { isSmallViewport, reduceMotion } = conditions;
+          const animatedElements = [sectionNameRef.current, textSection.current];
+
+          if (reduceMotion) {
+            gsap.set(animatedElements, { y: 0, autoAlpha: 1 });
+            return;
+          }
+
+          gsap.timeline({
+            defaults: { ease: 'power1.out' },
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: isSmallViewport ? 'top 88%' : 'top 78%',
+              end: isSmallViewport ? 'top 58%' : 'top 45%',
+              scrub: isSmallViewport ? 0.3 : 0.7,
+              fastScrollEnd: true,
+              invalidateOnRefresh: true,
+            },
+          })
+            .fromTo(sectionNameRef.current, { y: 70, autoAlpha: 0 }, { y: 0, autoAlpha: 1 })
+            .fromTo(textSection.current, { y: 45, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }, '<+0.12');
+        },
+      );
+    }, containerRef);
+
+    return () => {
+      media.revert();
+      ctx.revert();
+    };
+  }, []);
 
   useLayoutEffect(() => {
-      if (!sectionData.cards?.length || !sectionData.mobileCards?.length) {
-        return undefined;
-      }
+    const visibleCards = cardRefs.current.filter(Boolean);
+    if (visibleCards.length === 0) {
+      return undefined;
+    }
 
-      const isMobile = window.innerWidth < 768;
-      const ctx = gsap.context(() => {
-          const visibleCards = cardRefs.current.filter(Boolean);
+    const ctx = gsap.context(() => {
+      const timeline = gsap.timeline({
+        defaults: { ease: 'power1.out' },
+        scrollTrigger: {
+          trigger: visibleCards[0],
+          start: 'top 92%',
+          end: 'top 48%',
+          scrub: isMobile ? 0.3 : 0.7,
+          fastScrollEnd: true,
+          invalidateOnRefresh: true,
+        },
+      });
 
-          let tl = gsap.timeline({
-            scrollTrigger: {
-              start: isMobile ? "-=50%" : "-=30%",
-              end: isMobile ? "50%" : "10%",
-              trigger: containerRef.current,
-              pin: false,
-              smooth: isMobile ? 10 : 10,
-              scrub: isMobile ? 1 : 2,
-              markers: false,
-              ease: "power1.out",
-            },
-          });
+      visibleCards.forEach((card, index) => {
+        const direction = index % 2 === 0 ? -1 : 1;
+        timeline.fromTo(
+          card,
+          {
+            x: direction * (isMobile ? 120 : 500),
+            autoAlpha: 0,
+            rotation: direction * (isMobile ? 8 : 30),
+          },
+          {
+            x: 0,
+            autoAlpha: 1,
+            rotation: 0,
+            transformOrigin: direction < 0 ? '0% 100%' : '100% 100%',
+          },
+          index === 0 ? 0 : '<+0.08',
+        );
+      });
+    }, containerRef);
 
-          tl
-            .fromTo(sectionNameRef.current, { y: 100, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }, "<")
-            .fromTo(textSection.current, { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }, "<+0.2");
-
-          visibleCards.forEach((card, index) => {
-            tl.fromTo(
-              card,
-              { x: index % 2 === 0 ? -600 : 600, autoAlpha: 0, rotation: index % 2 === 0 ? 45 : -45 },
-              { x: 0, autoAlpha: 1, transformOrigin: index % 2 === 0 ? "0% 100%" : "100% 100%", rotation: 0 },
-              "<+0.2"
-            );
-          });
-
-        }, containerRef);
-
-      const refresh = () => ScrollTrigger.refresh();
-      window.addEventListener('load', refresh, { once: true });
-      requestAnimationFrame(refresh);
-      return () => {
-        window.removeEventListener('load', refresh);
-        ctx.revert();
-      };
-  }, [sectionData]);
-
-  useEffect(() => {
-
-    setTimeout(() => {
-      const handleResize = () => {
-        setIsMobile(window.innerWidth <= 900);
-      };
-
-      handleResize();
-      window.addEventListener('resize', handleResize);
-
-      const isMobile = window.matchMedia("(max-width: 768px)").matches;
-      console.log('isMobile', isMobile)
-    }, [isMobile]);
-
-
-    console.log('isMobile', isMobile)
-
-  });
+    return () => ctx.revert();
+  }, [isMobile, sectionData.cards, sectionData.mobileCards]);
 
 
   return (

@@ -1,21 +1,30 @@
 // components/Flair.js
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import styles from "./Flair.module.css"; 
 import Image from "next/image";
 
 const Flair = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const primaryFlairRef = useRef(null);
+  const secondaryFlairRef = useRef(null);
 
   useEffect(() => {
-    gsap.set(".flair", { xPercent: -50, yPercent: -50 });
-    gsap.set(".flair2", { xPercent: -50, yPercent: -50 });
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!finePointer.matches) {
+      return undefined;
+    }
 
-    let xTo = gsap.quickTo(".flair", "x", { duration: 0.6, ease: "power3" }),
-        yTo = gsap.quickTo(".flair", "y", { duration: 0.6, ease: "power3" });
+    const primaryFlair = primaryFlairRef.current;
+    const secondaryFlair = secondaryFlairRef.current;
+    gsap.set(primaryFlair, { xPercent: -50, yPercent: -50 });
+    gsap.set(secondaryFlair, { xPercent: -50, yPercent: -50 });
 
-    let xTo2 = gsap.quickTo(".flair2", "x", { duration: 0.3, ease: "power3" }),
-        yTo2 = gsap.quickTo(".flair2", "y", { duration: 0.3, ease: "power3" });        
+    const xTo = gsap.quickTo(primaryFlair, "x", { duration: 0.6, ease: "power3" });
+    const yTo = gsap.quickTo(primaryFlair, "y", { duration: 0.6, ease: "power3" });
+
+    const xTo2 = gsap.quickTo(secondaryFlair, "x", { duration: 0.3, ease: "power3" });
+    const yTo2 = gsap.quickTo(secondaryFlair, "y", { duration: 0.3, ease: "power3" });
 
     const handleMouseMove = (e) => {
       xTo(e.clientX);
@@ -30,17 +39,18 @@ const Flair = () => {
     const draggableElements = document.querySelectorAll(".draggable");
 
     draggableElements.forEach((element) => {
-      element.addEventListener("mouseover", handleMouseOver);
-      element.addEventListener("mouseout", handleMouseOut);
+      element.addEventListener("pointerenter", handleMouseOver);
+      element.addEventListener("pointerleave", handleMouseOut);
     });
 
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      gsap.killTweensOf([primaryFlair, secondaryFlair]);
       draggableElements.forEach((element) => {
-        element.removeEventListener("mouseover", handleMouseOver);
-        element.removeEventListener("mouseout", handleMouseOut);
+        element.removeEventListener("pointerenter", handleMouseOver);
+        element.removeEventListener("pointerleave", handleMouseOut);
       });
     };
   }, []);
@@ -48,6 +58,7 @@ const Flair = () => {
   return (
     <>
     <div
+      ref={primaryFlairRef}
       className={`${styles.flair} flair flair--3 ${isHovered ? styles.hovered : ""}`}
     >    
 
@@ -55,6 +66,7 @@ const Flair = () => {
 
 
 <div
+ref={secondaryFlairRef}
 className={`${styles.flair2} flair2 flair--3 ${isHovered ? styles.hovered : ""}`}
 >
 

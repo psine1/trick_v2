@@ -1,6 +1,6 @@
 import styles from './CardAboutUs.module.css';
 import Image from 'next/image';
-import { useRef, useEffect } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import React, { forwardRef } from 'react';
 import SvgStrokeCardAboutUs from '../SvgStrokeCardAboutUs/SvgStrokeCardAboutUs';
@@ -21,41 +21,43 @@ const CardAboutUs = forwardRef(({ num, title, content, imageSrc, classNameProp }
   const footerRef = useRef(null);
   const contentRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      animationShadowRef.current = gsap.timeline({ paused: true })
+        .to(shadowStrokeRef.current, {
+          x: 10,
+          y: 5,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
 
+      gsap.set(bgCardRef.current, { autoAlpha: 0 });
 
-    animationShadowRef.current = gsap.timeline({ paused: true })
-      .to(shadowStrokeRef.current, {
-        x: 10,
-        y: 5,
-        duration: 0.3,
-        ease: 'power2.out',
-      })
+      animationRef.current = gsap.timeline({ paused: true })
+        .to(cardRef.current, {
+          scale: 1.025,
+          duration: 0.3,
+          ease: 'power2.out',
+        })
+        .to(bgCardRef.current, {
+          autoAlpha: 1,
+          scale: 1.15,
+          duration: 0.3,
+          ease: 'power2.out',
+        }, '<')
+        .to(wrapBgCardRef.current, {
+          autoAlpha: 1,
+          scale: 1.5,
+          duration: 0.3,
+          ease: 'power2.out',
+        }, '<');
+    }, cardRef);
 
-
-
-    gsap.set(bgCardRef.current, { autoAlpha: 0 })
-
-    animationRef.current = gsap.timeline({ paused: true })
-      .to(cardRef.current, {
-        scale: 1.025,
-        duration: 0.3,
-        ease: 'power2.out',
-      })
-      .to(bgCardRef.current, {
-        autoAlpha: 1,
-        scale: 1.15,
-        duration: 0.3,
-        ease: 'power2.out',
-      }, "<")
-      .to(wrapBgCardRef.current, {
-        autoAlpha: 1,
-        scale: 1.5,
-        duration: 0.3,
-        ease: 'power2.out',
-      }, "<")
-
-
+    return () => {
+      animationRef.current = null;
+      animationShadowRef.current = null;
+      ctx.revert();
+    };
   }, []);
 
   const handleMouseEnter = () => {
@@ -67,8 +69,8 @@ const CardAboutUs = forwardRef(({ num, title, content, imageSrc, classNameProp }
   };
 
   const handleMouseLeave = () => {
-    animationRef.current.reverse();
-    animationShadowRef.current.reverse();
+    animationRef.current?.reverse();
+    animationShadowRef.current?.reverse();
   };
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useMemo, useRef } from 'react';
 import { gsap } from 'gsap';
 import styles from './FloatingParticles.module.css';
 
@@ -24,8 +24,8 @@ const generateRandomParticles = (count) => {
 const Particle = ({ size, left, top, duration, zIndex, image }) => {
   const particleRef = useRef(null);
 
-  useEffect(() => {
-    gsap.to(particleRef.current, {
+  useLayoutEffect(() => {
+    const tween = gsap.to(particleRef.current, {
       y: particleRandom, 
       x: particleRandom,
       repeat: -1,
@@ -33,6 +33,8 @@ const Particle = ({ size, left, top, duration, zIndex, image }) => {
       ease: 'power1.inOut',
       duration: duration,
     });
+
+    return () => tween.kill();
   }, [duration]);
 
   return (
@@ -54,7 +56,7 @@ const Particle = ({ size, left, top, duration, zIndex, image }) => {
 };
 
 const FloatingParticles = () => {
-  const particles = generateRandomParticles(8); 
+  const particles = useMemo(() => generateRandomParticles(8), []);
 
   return (
     <div className={styles.particlesContainer}>

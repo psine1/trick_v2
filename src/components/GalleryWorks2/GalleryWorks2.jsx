@@ -1,17 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { Draggable } from 'gsap/Draggable';
-import { Observer } from 'gsap/Observer';
-
-//import { InertiaPlugin } from 'gsap/InertiaPlugin';
-
-import styles from './GalleryWorks2.module.css';
 import Image from 'next/image';
+import styles from './GalleryWorks2.module.css';
 import FloatingParticles from '../FloatingParticles/FloatingParticles';
-
+import { horizontalLoop } from '@/utils/gsapCustom';
 
 const images = [
-  
   '/images/gelleryWorks/cliente-01.jpg',
   '/images/gelleryWorks/cliente-02.jpg',
   '/images/gelleryWorks/cliente-03.jpg',
@@ -22,15 +17,11 @@ const images = [
   '/images/gelleryWorks/cliente-08.jpg',
   '/images/gelleryWorks/cliente-09.jpg',
   '/images/gelleryWorks/cliente-10.jpg',
-  // '/images/gelleryWorks/twolg-among-us2-port.png',
   '/images/gelleryWorks/at-games-port.jpg',
   '/images/gelleryWorks/azra-games-port.jpg',
-  //'/images/gelleryWorks/farbridge-port.jpg',
   '/images/gelleryWorks/free-rage-games-port.jpg',
   '/images/gelleryWorks/marvel-snap-port.jpg',
   '/images/gelleryWorks/play-to-win-port.jpg',
-  // '/images/gelleryWorks/twolg-among-us-port.jpg',
-  //'/images/gelleryWorks/twolg-among-us2-port.jpg',
   '/images/gelleryWorks/superjump-port.jpg',
 ];
 
@@ -51,12 +42,9 @@ const images2 = [
   '/images/gelleryWorks/cliente-12.jpg',
   '/images/gelleryWorks/cliente-13.jpg',
   '/images/gelleryWorks/cliente-03.jpg',
-
-
 ];
 
 const overlay = [
-  
   '/images/gelleryWorks/overlay-01.png',
   '/images/gelleryWorks/overlay-02.png',
   '/images/gelleryWorks/overlay-03.png',
@@ -92,316 +80,109 @@ const overlay2 = [
   '/images/gelleryWorks/overlay-12.png',
   '/images/gelleryWorks/overlay-13.png',
   '/images/gelleryWorks/overlay-03.png',
-
 ];
-
-
 
 gsap.registerPlugin(Draggable);
 
 const GalleryWorks2 = () => {
   const containerRef = useRef(null);
-  
-  const timelineGallery1Ref = useRef(null);
 
+  useLayoutEffect(() => {
+    let loop;
+    let draggable;
 
-
-  useEffect(() => { 
-
-
-
-
-
-    let ctx = gsap.context(() => {
-      let tl = gsap.timeline({});    
-      tl
-      .to(`[data-element="item"]`, 0.75, { scale: 0.95, ease: "none"}, "<")
-
-    }); 
-
-    let ctx2 = gsap.context(() => {
-      let tl2 = gsap.timeline({});    
-      tl2
-      .to(`[data-element="item"]`, 0.75, { scale: 0.95, ease: "none"}, "<")
-
-
-    }); 
-
-
-
-    setTimeout(() => { 
-
-      timelineGallery1Ref.current = slider('[data-element="container"]', '[data-element="item"]');
-
-      function slider(elem, itemName) {
-        gsap.utils.toArray(elem).forEach(container => {
-          let tl = horizontalLoop(gsap.utils.toArray(itemName), { draggable: true, speed: 0.3, repeat: -1 }),
-              clamp = gsap.utils.clamp(-10, 10),
-              isOver, reversedOnPause;        
-                    
-          
-          Observer.create({
-            target: document.scrollingElement,
-            type: "scroll,wheel",
-            onChangeY: self => {
-              tl.timeScale(clamp(self.velocityY * 0.03));
-              if (isOver) {
-                gsap.to(tl, { timeScale: 1, duration: 1, overwrite: true });
-              }
-            }
-          });
-    
-        });
+    const ctx = gsap.context(() => {
+      const items = gsap.utils.toArray('[data-element="item"]');
+      if (items.length === 0) {
+        return;
       }
-    
-    
-      function horizontalLoop(items, config) {
-        items = gsap.utils.toArray(items);
-        config = config || {};
-        let onChange = config.onChange,
-            lastIndex = 0,
-            tl = gsap.timeline({repeat: config.repeat, onUpdate: onChange && function() {
-              let i = tl.closestIndex()
-              if (lastIndex !== i) {
-                lastIndex = i;
-                onChange(items[i], i);
-              }
-            }, paused: config.paused, defaults: {ease: "none"}, onReverseComplete: () => tl.totalTime(tl.rawTime() + tl.duration() * 100)}),
-            length = items.length,
-            startX = items[0].offsetLeft,
-            times = [],
-            widths = [],
-            spaceBefore = [],
-            xPercents = [],
-            curIndex = 0,
-            center = config.center,
-            pixelsPerSecond = (config.speed || 1) * 101,
-            snap = config.snap === false ? v => v : gsap.utils.snap(config.snap || 1), 
-            timeOffset = 0, 
-            container = center === true ? items[0].parentNode : gsap.utils.toArray(center)[0] || items[0].parentNode,
-            totalWidth,
-            getTotalWidth = () => items[length-1].offsetLeft + xPercents[length-1] / 100 * widths[length-1] - startX + spaceBefore[0] + items[length-1].offsetWidth * gsap.getProperty(items[length-1], "scaleX") + (parseFloat(config.paddingRight) || 0),
-            populateWidths = () => {
-              let b1 = container.getBoundingClientRect(), b2;
-              items.forEach((el, i) => {
-                widths[i] = parseFloat(gsap.getProperty(el, "width", "px"));
-                xPercents[i] = snap(parseFloat(gsap.getProperty(el, "x", "px")) / widths[i] * 100 + gsap.getProperty(el, "xPercent"));
-                b2 = el.getBoundingClientRect();
-                spaceBefore[i] = b2.left - (i ? b1.right : b1.left);
-                b1 = b2;
-              });
-              gsap.set(items, { 
-                xPercent: i => xPercents[i]
-              });
-              totalWidth = getTotalWidth();
-            },
-            timeWrap,
-            populateOffsets = () => {
-              timeOffset = center ? tl.duration() * (container.offsetWidth / 2) / totalWidth : 0;
-              center && times.forEach((t, i) => {
-                times[i] = timeWrap(tl.labels["label" + i] + tl.duration() * widths[i] / 2 / totalWidth - timeOffset);
-              });
-            },
-            getClosest = (values, value, wrap) => {
-              let i = values.length,
-                closest = 1e10,
-                index = 0, d;
-              while (i--) {
-                d = Math.abs(values[i] - value);
-                if (d > wrap / 2) {
-                  d = wrap - d;
-                }
-                if (d < closest) {
-                  closest = d;
-                  index = i;
-                }
-              }
-              return index;
-            },
-    
-    
-            populateTimeline = () => {
-              let i, item, curX, distanceToStart, distanceToLoop;
-              tl.clear();
-              for (i = 0; i < length; i++) {
-                item = items[i];
-                curX = xPercents[i] / 100 * widths[i];
-                distanceToStart = item.offsetLeft + curX - startX + spaceBefore[0];
-                distanceToLoop = distanceToStart + widths[i] * gsap.getProperty(item, "scaleX")  ;
-                tl.to(item, {xPercent: snap((curX - distanceToLoop) / widths[i] * 101), duration: distanceToLoop / pixelsPerSecond}, 0)
-                  .fromTo(item, {xPercent: snap((curX - distanceToLoop + totalWidth) / widths[i] * 100)}, {xPercent: xPercents[i], duration: (curX - distanceToLoop + totalWidth - curX) / pixelsPerSecond, immediateRender: false}, distanceToLoop / pixelsPerSecond)
-                  .add("label" + i, distanceToStart / pixelsPerSecond);    
-                times[i] = distanceToStart / pixelsPerSecond;
-              }
-              timeWrap = gsap.utils.wrap(0, tl.duration());
-            }, 
-    
-            
-            refresh = (deep) => {
-               let progress = tl.progress();
-               tl.progress(0, true);
-               populateWidths();
-               deep && populateTimeline();
-               populateOffsets();
-               deep && tl.draggable ? tl.time(times[curIndex], true) : tl.progress(progress, true);
-            },
-            proxy;
-        gsap.set(items, {x: 0});
-        populateWidths();
-        populateTimeline();
-        populateOffsets();
-        window.addEventListener("resize", () => refresh(true));
-        function toIndex(index, vars) {
-          vars = vars || {};
-          (Math.abs(index - curIndex) > length / 2) && (index += index > curIndex ? -length : length); 
-          let newIndex = gsap.utils.wrap(0, length, index),
-            time = times[newIndex];
-          if (time > tl.time() !== index > curIndex) { 
-            time += tl.duration() * (index > curIndex ? 1 : -1);
-          }
-          if (time < 0 || time > tl.duration()) {
-            vars.modifiers = {time: timeWrap};
-          }
-          curIndex = newIndex;
-          vars.overwrite = true;
-          gsap.killTweensOf(proxy);
-          return tl.tweenTo(time, vars);
-        }
-        tl.next = vars => toIndex(curIndex+1, vars);
-        tl.previous = vars => toIndex(curIndex-1, vars);
-        tl.current = () => curIndex;
-        tl.toIndex = (index, vars) => toIndex(index, vars);
-        tl.closestIndex = setCurrent => {
-          let index = getClosest(times, tl.time(), tl.duration());
-          setCurrent && (curIndex = index);
-          return index;
-        };
-        tl.times = times;
-        tl.progress(1, true).progress(0, true);
-        if (config.reversed) {
-          tl.vars.onReverseComplete();
-          tl.reverse();
-        }
-        if (config.draggable && typeof(Draggable) === "function") {
-          proxy = document.createElement("div");
-          let wrap = gsap.utils.wrap(0, 1),
-              ratio, startProgress, draggable, velocity = 0, inertiaTween,
-              align = () => tl.progress(wrap(startProgress + (draggable.startX - draggable.x) * ratio)),
-              syncIndex = () => tl.closestIndex(true),
-              lastX = 0, lastTime = Date.now();
-        
-          draggable = Draggable.create(proxy, {
-            trigger: items[0].parentNode,
-            type: "x",
-            onPressInit() {
-              if (inertiaTween) inertiaTween.kill(); 
-              gsap.killTweensOf(tl);
-              startProgress = tl.progress();
-              refresh();
-              ratio = 1 / totalWidth;
-              gsap.set(proxy, {x: startProgress / -ratio});
-              tl.timeScale(0);
-              lastX = draggable.x;
-              lastTime = Date.now();
-            },
-            onDrag: function() {
-              align();
-              let currentTime = Date.now();
-              velocity = (draggable.x - lastX) / (currentTime - lastTime);
-              lastX = draggable.x;
-              lastTime = currentTime;
-            },
-            onDragEnd: function() {
-              let inertiaDistance = velocity * 100; 
-              inertiaTween = gsap.to(draggable, {
-                duration: 2, 
-                x: "+=" + inertiaDistance,
-                ease: "power2.out",
-                onUpdate: align,
-                onComplete: syncIndex
-              });
-            },
-            onRelease: syncIndex
-          })[0];
-        
-          tl.draggable = draggable;
-        }
-        tl.closestIndex(true);
-        onChange && onChange(items[curIndex], curIndex);
-        return tl;
-      }
-    
 
-  }, 500);
+      gsap.to(items, { scale: 0.95, duration: 0.75, ease: 'none' });
+      loop = horizontalLoop(items, { repeat: -1, speed: 0.3 });
 
+      const proxy = document.createElement('div');
+      const wrapProgress = gsap.utils.wrap(0, 1);
+      let startProgress = 0;
 
+      draggable = Draggable.create(proxy, {
+        trigger: containerRef.current,
+        type: 'x',
+        minimumMovement: 6,
+        onPressInit() {
+          startProgress = loop.progress();
+          gsap.set(proxy, { x: 0 });
+          loop.pause();
+        },
+        onDrag() {
+          const firstItem = items[0];
+          const lastItem = items[items.length - 1];
+          const totalWidth = Math.max(
+            lastItem.offsetLeft + lastItem.offsetWidth - firstItem.offsetLeft,
+            1,
+          );
+          loop.progress(wrapProgress(startProgress - this.x / totalWidth));
+        },
+        onRelease() {
+          loop.play();
+        },
+      })[0];
+    }, containerRef);
 
+    return () => {
+      draggable?.kill();
+      loop?.kill();
+      ctx.revert();
+    };
   }, []);
 
-
   return (
-
     <>
-
-<div ref={containerRef} data-element="container" className={`${styles.containerWrap} draggable`}>
-
-    <div className={`${styles.sliderWrap}`}>
-      <div data-element="loop" className={`${styles.loop}`}>
-      {images.map((src, index) => (
-          <div 
-            key={index}
-            data-element="item"
-            className={`${styles.item}`}
-          >                
-            <Image 
-              className={`${styles.itemInner}`}
-              src={src}
-              alt={`img-${index}`}
-              width={500}  
-              height={500} 
-            />
-
-            <Image 
-                  className={`${styles.itemInner} ${styles.overlayImage}`}
-                  src={overlay[index]} 
-                  alt={`overlay-${index}`}
-                  width={500}  
-                  height={500} 
+      <div ref={containerRef} data-element="container" className={`${styles.containerWrap} draggable`}>
+        <div className={styles.sliderWrap}>
+          <div data-element="loop" className={styles.loop}>
+            {images.map((src, index) => (
+              <div key={src} data-element="item" className={styles.item}>
+                <Image
+                  className={styles.itemInner}
+                  src={src}
+                  alt={`Client work ${index + 1}`}
+                  width={500}
+                  height={500}
                 />
 
-            <div className={`${styles.itemInner2} `}>
-                <Image 
-                      className={``}
-                      src={images2[index]} 
-                      alt={`overlay-${index}`}
-                      width={500}  
-                      height={500} 
-                    />    
+                <Image
+                  className={`${styles.itemInner} ${styles.overlayImage}`}
+                  src={overlay[index]}
+                  alt=""
+                  width={500}
+                  height={500}
+                />
 
-                <Image 
-                      className={`${styles.overlayImage2}`}
-                      src={overlay2[index]} 
-                      alt={`overlay-${index}`}
-                      width={500}  
-                      height={500} 
-                    />
-            </div>
+                <div className={styles.itemInner2}>
+                  <Image
+                    src={images2[index]}
+                    alt={`Client work alternate ${index + 1}`}
+                    width={500}
+                    height={500}
+                  />
 
+                  <Image
+                    className={styles.overlayImage2}
+                    src={overlay2[index]}
+                    alt=""
+                    width={500}
+                    height={500}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>                        
-    </div>
+        </div>
 
-    <FloatingParticles />
+        <FloatingParticles />
+      </div>
 
-
-</div>    
-
-<div className={`${styles.fix}`}></div>
-
-
-
-
+      <div className={styles.fix}></div>
     </>
   );
 };

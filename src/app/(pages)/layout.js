@@ -22,23 +22,49 @@ export default function RootLayout({ children }) {
   const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
+    let isCancelled = false;
+    let minimumDelayId;
+    let fontTimeoutId;
+
+    const minimumDelay = new Promise((resolve) => {
+      minimumDelayId = window.setTimeout(resolve, 350);
+    });
+    const fontTimeout = new Promise((resolve) => {
+      fontTimeoutId = window.setTimeout(resolve, 1500);
+    });
+    const fontsReady = Promise.race([
+      document.fonts?.ready ?? Promise.resolve(),
+      fontTimeout,
+    ]);
+
+    Promise.all([fontsReady, minimumDelay]).then(() => {
+      if (!isCancelled) {
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+      window.clearTimeout(minimumDelayId);
+      window.clearTimeout(fontTimeoutId);
+    };
 
   }, []);
 
   return (
     <>
-        {loading && <Preloader />}
-        <div className={`  transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
-          <NavBar onOpenModal={openModal} />
-          <main>
-            {children}
-          </main>
-          <Footer/>
-
-        </div>
-        {isModalOpen && <Contact onClose={closeModal} />}
+        {loading ? (
+          <Preloader />
+        ) : (
+          <div>
+            <NavBar onOpenModal={openModal} />
+            <main>
+              {children}
+            </main>
+            <Footer/>
+          </div>
+        )}
+        {!loading && isModalOpen && <Contact onClose={closeModal} />}
      </>
   )
 }

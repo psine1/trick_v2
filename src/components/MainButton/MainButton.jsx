@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './MainButton.module.css';
 import SvgStrokeButton from '../SvgStrokeButton/SvgStrokeButton';
 
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import { gsap } from 'gsap';
 import Link from 'next/link';
 
@@ -15,8 +15,8 @@ const MainButton = ({ textContent, buttonColor = "buttonRose1", linkUrl, onClick
   const animationRef = useRef();
   const buttonRef = useRef();
 
-  useEffect(() => {
-
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
     if(isShadow){
       animationShadowRef.current = gsap.timeline({ paused: true })
       .to(shadowStrokeRef.current, {
@@ -32,26 +32,30 @@ const MainButton = ({ textContent, buttonColor = "buttonRose1", linkUrl, onClick
         scale: 1.025,
         duration: 0.3,
         ease: 'power2.out',
-      })
+      });
+    }, buttonRef);
 
-
-
-  }, []);
+    return () => {
+      animationRef.current = null;
+      animationShadowRef.current = null;
+      ctx.revert();
+    };
+  }, [isShadow]);
 
 
   const handleMouseEnter = () => {
-    animationRef.current.play();
+    animationRef.current?.play();
     if(isShadow){
-      animationShadowRef.current.play();
+      animationShadowRef.current?.play();
     }
   
   };
 
   const handleMouseLeave = () => {
-    animationRef.current.reverse();
+    animationRef.current?.reverse();
     
     if(isShadow){
-      animationShadowRef.current.reverse();
+      animationShadowRef.current?.reverse();
     }
   };
 
@@ -67,7 +71,7 @@ const MainButton = ({ textContent, buttonColor = "buttonRose1", linkUrl, onClick
             </div>
           </div>
 
-          <button className={`relative py-3 ${styles.mainButton} ${styles[buttonColor]}`}>
+          <button type="button" className={`relative py-3 ${styles.mainButton} ${styles[buttonColor]}`}>
             {textContent}
           </button>
 
@@ -83,13 +87,13 @@ const MainButton = ({ textContent, buttonColor = "buttonRose1", linkUrl, onClick
 
   return (
     <>
-      <div ref={buttonRef} className='relative flex justify-center' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={onClick}>
+      <div ref={buttonRef} className='relative flex justify-center' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <div ref={shadowStrokeRef} className={` absolute ${styles.wrapStroke} ${styles.button} `}>
           <div className={`${styles.wrapStrokeHover}`}>
             <SvgStrokeButton colorStroke={colorStroke}/>
           </div>
         </div>
-        <button className={`relative py-3 ${styles.mainButton} ${styles.button} ${styles[buttonColor]}`} onClick={onClick}
+        <button type="button" className={`relative py-3 ${styles.mainButton} ${styles.button} ${styles[buttonColor]}`} onClick={onClick}
         >
           {textContent}
         </button>

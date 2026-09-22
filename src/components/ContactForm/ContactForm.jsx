@@ -1,52 +1,21 @@
 'use client';
 
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import styles from './ContactForm.module.css';
 import SvgStrokeInput from '../SvgStrokeInput/SvgStrokeInput';
 import SvgStrokeMessage from '../SvgStrokeMessage/SvgStrokeMessage';
 import SvgStrokeButtonForm from '../SvgStrokeButtonForm/SvgStrokeButtonForm';
-import SvgbkgInputFile from '../SvgbkgInputFile/SvgbkgInputFile';
+import useMediaQuery from '@/hooks/useMediaQuery';
 
 import { sendEmailContact } from '@/services/nordemailer';
 
 const ContactForm = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 900px)');
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [form, setForm] = useState({ name: '', subject: '', email: '', phone: '', message: '', file: '' });
-  useEffect(() => {
-
-    setTimeout(() => {
-      const handleResize = () => {
-        setIsMobile(window.innerWidth <= 900);
-      };
-
-      handleResize();
-      window.addEventListener('resize', handleResize);
-
-      const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    }, [isMobile]);
-
-  },);
-
-  useEffect(() => {
-
-    const fileSelect = document.getElementById("selectfile");
-    const inputFile = document.getElementById('file');
-
-    inputFile.addEventListener('change', onFileSelected)
-
-    const openFile = () => {
-      const fileElem = document.getElementById("file");
-      fileElem.click();
-    };
-
-    fileSelect.addEventListener("click", openFile);
-    return () => {
-      fileSelect.removeEventListener('click', openFile);
-      inputFile.removeEventListener('change', onFileSelected)
-    };
-  },);
+  const fileInputRef = useRef(null);
+  const fileLabelRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,11 +24,13 @@ const ContactForm = () => {
     const data = Object.fromEntries(formData.entries());
 
     if (!validateEmail(data.email)) {
+      setIsButtonDisabled(false);
       alert('ingresa un email válido');
       return;
     }
 
     if (!validatePhone(data.phone)) {
+      setIsButtonDisabled(false);
       alert('ingresa un teléfono válido');
       return;
     }
@@ -67,15 +38,24 @@ const ContactForm = () => {
     console.log("Result: ", result);
     if (result?.accepted?.length > 0) {
       setForm({ name: '', subject: '', email: '', phone: '', message: '', file: '' });
-      document.querySelector('input[type="file"]').placeholder = 'File'
+      if (fileLabelRef.current) {
+        fileLabelRef.current.textContent = 'File';
+      }
     }
     setIsButtonDisabled(false)
   };
 
   const filesBase64 = async (file) => {
-    const bufferFile = await file.arrayBuffer()
-    const fileBase64 = Buffer.from(bufferFile).toString('base64')
-    return `data:${file.type};base64,${fileBase64}`
+    if (!(file instanceof File) || file.size === 0) {
+      return null;
+    }
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
   };
 
   const validateEmail = (email) => {
@@ -90,17 +70,12 @@ const ContactForm = () => {
   };
 
   const onFileSelected = (evt) => {
-    const fileInput = evt.target;
-    const files = Array.from(evt.target.files).map(file => file.name);
-    const fileSelect = document.getElementById("selectfileSpan");
-    if (files.length === 1) {
-      fileSelect.innerText = files[0].replace(/.*[\/\\]/, '');
-    }
-    else if (files.length > 1) {
-      fileInput.innerText = `${files.length} files`;
-    }
-    else {
-      fileInput.innerText = 'File';
+    const files = Array.from(evt.target.files ?? []);
+    const selectedFile = files[0] ?? '';
+    setForm((currentForm) => ({ ...currentForm, file: selectedFile }));
+
+    if (fileLabelRef.current) {
+      fileLabelRef.current.textContent = selectedFile ? selectedFile.name : 'File';
     }
   }
 
@@ -185,19 +160,24 @@ const ContactForm = () => {
             <div className={`${styles.pathInputFileShadow} absolute`}>
               {isMobile ? <SvgStrokeInput /> : <SvgStrokeButtonForm />}
             </div>
-            <div id='selectfile' className={`${styles.pathInputFile}`}>
-              <button  className={`relative ${styles.mainButton}`}>
+            <div className={`${styles.pathInputFile}`}>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className={`relative ${styles.mainButton}`}
+              >
                 Select file
               </button>
-              <span id='selectfileSpan' className={`${styles.pathSpanFile}`}>
+              <span ref={fileLabelRef} className={`${styles.pathSpanFile}`}>
                 File
               </span>
             </div>
             <input
+              ref={fileInputRef}
               type="file"
               id="file"
               name="file"
-               onChange={(e) => setForm({ ...form, file: e })}
+              onChange={onFileSelected}
               style={{ height: '58px', backgroundColor: "#FFF", display: 'none' }}
               className={`${styles.pathInputFile} p-2 py-6 block w-full focus:outline-none`}
               placeholder="File"
