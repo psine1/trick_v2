@@ -110,22 +110,41 @@ const NavBar = ({ onOpenModal }) => {
           ease: 'power2.out',
         });
 
-      gsap.set([menuRef.current, bgRef.current], { xPercent: 120 });
-      gsap.set(menuRef.current, { autoAlpha: 0 });
-      gsap.set('[data-element="btnMenu"]', { x: 80, autoAlpha: 0 });
+      const menuElements = menuRef.current?.querySelectorAll('[data-element="btnMenu"]') || [];
+
+      gsap.set(bgRef.current, {
+        x: 0,
+        xPercent: 102,
+        autoAlpha: 0,
+        force3D: true,
+      });
+      gsap.set(menuRef.current, { x: 0, xPercent: 0, autoAlpha: 0 });
+      gsap.set(menuElements, { x: 0, y: 14, autoAlpha: 0, force3D: true });
 
       animationMenuRef.current = gsap.timeline({
         paused: true,
-        defaults: { ease: 'power2.out' },
+        defaults: { overwrite: 'auto' },
       })
-        .to([bgRef.current, menuRef.current], { xPercent: 0, duration: 0.65 }, 0)
-        .to(menuRef.current, { autoAlpha: 1, duration: 0.01 }, 0)
-        .to('[data-element="btnMenu"]', {
-          x: 0,
+        .to(bgRef.current, {
+          xPercent: 0,
           autoAlpha: 1,
-          duration: 0.45,
-          stagger: 0.06,
-        }, 0.22);
+          duration: 0.5,
+          ease: 'power3.out',
+          force3D: true,
+        }, 0)
+        .to(menuRef.current, {
+          autoAlpha: 1,
+          duration: 0.12,
+          ease: 'none',
+        }, 0.06)
+        .to(menuElements, {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.3,
+          stagger: 0.035,
+          ease: 'power2.out',
+          force3D: true,
+        }, 0.14);
     }, navBarRef);
 
     return () => {
@@ -154,10 +173,18 @@ const NavBar = ({ onOpenModal }) => {
     }
 
     const previousOverflow = document.body.style.overflow;
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
     document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleEscape);
 
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleEscape);
     };
   }, [isOpen]);
 
@@ -204,10 +231,13 @@ const NavBar = ({ onOpenModal }) => {
           className={`pt-4 md:pt-6 fixed md:absolute flex justify-center content-center ${styles.navFixed} `}
         >
           <nav ref={navBarRef} className={`${styles.wrapNav}`}>
-            <div className={`flex h-16`}>
+            <div className={`flex h-16 ${styles.navBarContent}`}>
               <div className="flex items-center justify-between grow relative md:px-6">
                 <div className={`flex relative h-full flex-shrink-0 md:w-2/12 lg:w-2/12 px-6 md:px-0 items-center justify-start z-50 drop-shadow-lg md:filter-none ${styles.shadow}`}>
-                  <Link href="/" onClick={() => handleIsSelect("")}>
+                  <Link href="/" onClick={() => {
+                    handleIsSelect("");
+                    setIsOpen(false);
+                  }}>
                     <Image ref={logoText}
                       className={`${styles.logoBlend} hidden md:block relative md:absolute top-0 left-0`}
                       src={isMobile ? '/images/logoMobile.svg' : '/images/logo-white.svg'}
@@ -259,12 +289,12 @@ const NavBar = ({ onOpenModal }) => {
                 <button
                   type="button"
                   onClick={toggleMenu}
-                  className={`inline-flex items-center justify-center p-2 ${styles.toggleMenu}`}
+                  className={`inline-flex items-center justify-center p-2 ${styles.toggleMenu} ${isOpen ? styles.toggleMenuOpen : ''}`}
                   aria-expanded={isOpen}
                   aria-controls="mobile-navigation"
                   aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 >
-                  <svg className="h-6 w-6" stroke="#FFFFFFE5" fill="none" viewBox="0 0 24 24">
+                  <svg className={`h-6 w-6 ${styles.menuIcon}`} stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -280,54 +310,90 @@ const NavBar = ({ onOpenModal }) => {
               id="mobile-navigation"
               ref={menuRef}
               aria-hidden={!isOpen}
-              className={`md:hidden ${styles.mobileMenu} py-12 ease-in-out`}
+              aria-label="Mobile navigation"
+              className={`md:hidden ${styles.mobileMenu} ${isOpen ? styles.mobileMenuOpen : ''} ease-in-out`}
             >
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                {
-                  NAV_LINKS.map((link, index) => (
-                    <Link key={index} onClick={handleLinkClick} href={link.link} data-element="btnMenu" className="block px-3 py-2 rounded-md hover:bg-gray-900 hover:bg-opacity-20">
-                      {link.title}
+              <div className={styles.mobileMenuInner}>
+                <div className={styles.mobileMenuContent}>
+                  <div className={styles.menuEyebrow} data-element="btnMenu">
+                    <span>MENU</span>
+                    <span className={styles.menuEyebrowLine} aria-hidden="true"></span>
+                    <span>TRICK STUDIOS</span>
+                  </div>
+
+                  <div className={styles.mobileMenuLinks}>
+                    {NAV_LINKS.map((link, index) => {
+                      const isActive = link.name === activeSection
+                        || (link.name === 'jointrick' && pathname === '/jointrick');
+
+                      return (
+                        <Link
+                          key={link.name}
+                          onClick={handleLinkClick}
+                          href={link.link}
+                          data-element="btnMenu"
+                          aria-current={isActive ? 'page' : undefined}
+                          className={`${styles.mobileMenuLink} ${isActive ? styles.mobileMenuLinkActive : ''}`}
+                        >
+                          <span className={styles.mobileMenuIndex}>{String(index + 1).padStart(2, '0')}</span>
+                          <span className={styles.mobileMenuLabel}>{link.title}</span>
+                          <span className={styles.mobileMenuArrow} aria-hidden="true">
+                            <svg viewBox="0 0 20 20" fill="none">
+                              <path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </span>
+                        </Link>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      onClick={handleContactClick}
+                      data-element="btnMenu"
+                      className={styles.mobileMenuLink}
+                    >
+                      <span className={styles.mobileMenuIndex}>04</span>
+                      <span className={styles.mobileMenuLabel}>CONTACT US</span>
+                      <span className={styles.mobileMenuArrow} aria-hidden="true">
+                        <svg viewBox="0 0 20 20" fill="none">
+                          <path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className={styles.mobileMenuFooter} data-element="btnMenu">
+                  <span className={styles.socialLabel}>FOLLOW US</span>
+                  <div className={styles.socialLinks}>
+                    <Link className={styles.socialLink} aria-label="Facebook" href="https://www.facebook.com/trickgamingstudios" target="_blank" rel="noopener noreferrer">
+                      <Image
+                        src="/images/icon-fb.svg"
+                        alt=""
+                        width={42}
+                        height={42}
+                        className={styles.socialImage}
+                      />
                     </Link>
-                  )
-                  )
-                }
-                <button
-                  type="button"
-                  onClick={handleContactClick}
-                  data-element="btnMenu"
-                  className="block w-full px-3 py-2 text-left rounded-md hover:bg-gray-900 hover:bg-opacity-20"
-                >
-                  CONTACT US
-                </button>
-              </div>
-              <div className={`flex p-5 gap-4`} data-element="btnMenu">
-                <Link href="https://www.facebook.com/trickgamingstudios" target="_blank">
-                  <Image
-                    src="/images/icon-fb.svg"
-                    alt="Facebook"
-                    width={50}
-                    height={50}
-                    className={styles.socialImage}
-                  />
-                </Link>
-                <Link href="https://www.instagram.com/trickgamingstudios" target="_blank">
-                  <Image
-                    src="/images/icon-ig.svg"
-                    alt="Instagram"
-                    width={50}
-                    height={50}
-                    className={styles.socialImage}
-                  />
-                </Link>
-                <Link href="https://www.linkedin.com/company/trick-studios" target="_blank">
-                  <Image
-                    src="/images/icon-in.svg"
-                    alt="LinkedIn"
-                    width={50}
-                    height={50}
-                    className={styles.socialImage}
-                  />
-                </Link>
+                    <Link className={styles.socialLink} aria-label="Instagram" href="https://www.instagram.com/trickgamingstudios" target="_blank" rel="noopener noreferrer">
+                      <Image
+                        src="/images/icon-ig.svg"
+                        alt=""
+                        width={42}
+                        height={42}
+                        className={styles.socialImage}
+                      />
+                    </Link>
+                    <Link className={styles.socialLink} aria-label="LinkedIn" href="https://www.linkedin.com/company/trick-studios" target="_blank" rel="noopener noreferrer">
+                      <Image
+                        src="/images/icon-in.svg"
+                        alt=""
+                        width={42}
+                        height={42}
+                        className={styles.socialImage}
+                      />
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </nav>

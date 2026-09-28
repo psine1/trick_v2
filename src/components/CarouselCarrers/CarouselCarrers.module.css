@@ -69,4 +69,7 @@
 
 }
 
+.swiperPaginationOverride :global(.swiper) {
+  touch-action: pan-y;
+}
 

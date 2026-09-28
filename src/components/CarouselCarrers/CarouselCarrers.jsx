@@ -20,12 +20,15 @@ const CarouselCarrers = () => {
         grabCursor={true}
         centeredSlides={false}
         slidesPerView={3} // Visible en pantallas grandes
+        speed={700}
         pagination={{
           clickable: true, // Hacer los bullets clicables
         }}
         autoplay={{
-          delay: 200000000, // Cambiar slides automáticamente cada 3 segundos
+          delay: 3000,
           disableOnInteraction: false, // Continuar autoplay al interactuar con el slider
+          pauseOnMouseEnter: true,
+          waitForTransition: true,
         }}
         loop={true}
         modules={[EffectCoverflow, Pagination, Autoplay]} // Agregar los módulos
