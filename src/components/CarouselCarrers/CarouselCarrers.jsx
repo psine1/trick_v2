@@ -6,15 +6,39 @@ import 'swiper/css/autoplay';    // Importar estilos de autoplay (opcional)
 import { EffectCoverflow, Pagination, Autoplay } from 'swiper/modules';
 import styles from './CarouselCarrers.module.css';
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
+import useInViewport from '@/hooks/useInViewport';
 
 // Import Swiper styles
 import 'swiper/css';
 
 const CarouselCarrers = () => {
+  const containerRef = useRef(null);
+  const swiperRef = useRef(null);
+  const isInViewport = useInViewport(containerRef);
+
+  useEffect(() => {
+    const swiper = swiperRef.current;
+
+    if (!swiper || swiper.destroyed) {
+      return;
+    }
+
+    if (isInViewport) {
+      swiper.autoplay.start();
+    } else {
+      swiper.autoplay.stop();
+    }
+  }, [isInViewport]);
+
   return (
     <>  
-    <div className={`${styles.swiperPaginationOverride} `}>
+    <div ref={containerRef} className={`${styles.swiperPaginationOverride} `}>
       <Swiper
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+          swiper.autoplay.stop();
+        }}
         spaceBetween={60}
         effect="coverflow"
         grabCursor={true}

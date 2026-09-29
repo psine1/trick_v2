@@ -1,10 +1,12 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { Draggable } from 'gsap/Draggable';
 import Image from 'next/image';
 import styles from './GalleryWorks2.module.css';
 import FloatingParticles from '../FloatingParticles/FloatingParticles';
 import { horizontalLoop } from '@/utils/gsapCustom';
+import useInViewport from '@/hooks/useInViewport';
+import useMediaQuery from '@/hooks/useMediaQuery';
 
 const images = [
   '/images/gelleryWorks/cliente-01.jpg',
@@ -86,19 +88,21 @@ gsap.registerPlugin(Draggable);
 
 const GalleryWorks2 = () => {
   const containerRef = useRef(null);
+  const loopRef = useRef(null);
+  const isMobile = useMediaQuery('(max-width: 900px)');
+  const isInViewport = useInViewport(containerRef);
 
   useLayoutEffect(() => {
-    let loop;
     let draggable;
 
     const ctx = gsap.context(() => {
-      const items = gsap.utils.toArray('[data-element="item"]');
+      const items = Array.from(containerRef.current?.querySelectorAll('[data-element="item"]') ?? []);
       if (items.length === 0) {
         return;
       }
 
       gsap.to(items, { scale: 0.95, duration: 0.75, ease: 'none' });
-      loop = horizontalLoop(items, { repeat: -1, speed: 0.3 });
+      loopRef.current = horizontalLoop(items, { repeat: -1, speed: 0.3, paused: true });
 
       const proxy = document.createElement('div');
       const wrapProgress = gsap.utils.wrap(0, 1);
@@ -109,9 +113,9 @@ const GalleryWorks2 = () => {
         type: 'x',
         minimumMovement: 6,
         onPressInit() {
-          startProgress = loop.progress();
+          startProgress = loopRef.current.progress();
           gsap.set(proxy, { x: 0 });
-          loop.pause();
+          loopRef.current.pause();
         },
         onDrag() {
           const firstItem = items[0];
@@ -120,20 +124,29 @@ const GalleryWorks2 = () => {
             lastItem.offsetLeft + lastItem.offsetWidth - firstItem.offsetLeft,
             1,
           );
-          loop.progress(wrapProgress(startProgress - this.x / totalWidth));
+          loopRef.current.progress(wrapProgress(startProgress - this.x / totalWidth));
         },
         onRelease() {
-          loop.play();
+          loopRef.current.play();
         },
       })[0];
     }, containerRef);
 
     return () => {
       draggable?.kill();
-      loop?.kill();
+      loopRef.current?.kill();
+      loopRef.current = null;
       ctx.revert();
     };
-  }, []);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (isInViewport) {
+      loopRef.current?.play();
+    } else {
+      loopRef.current?.pause();
+    }
+  }, [isInViewport, isMobile]);
 
   return (
     <>
@@ -148,15 +161,19 @@ const GalleryWorks2 = () => {
                   alt={`Client work ${index + 1}`}
                   width={500}
                   height={500}
+                  sizes={isMobile ? '224px' : '288px'}
                 />
 
-                <Image
-                  className={`${styles.itemInner} ${styles.overlayImage}`}
-                  src={overlay[index]}
-                  alt=""
-                  width={500}
-                  height={500}
-                />
+                {!isMobile && (
+                  <Image
+                    className={`${styles.itemInner} ${styles.overlayImage}`}
+                    src={overlay[index]}
+                    alt=""
+                    width={500}
+                    height={500}
+                    sizes="288px"
+                  />
+                )}
 
                 <div className={styles.itemInner2}>
                   <Image
@@ -164,22 +181,26 @@ const GalleryWorks2 = () => {
                     alt={`Client work alternate ${index + 1}`}
                     width={500}
                     height={500}
+                    sizes={isMobile ? '224px' : '288px'}
                   />
 
-                  <Image
-                    className={styles.overlayImage2}
-                    src={overlay2[index]}
-                    alt=""
-                    width={500}
-                    height={500}
-                  />
+                  {!isMobile && (
+                      <Image
+                        className={styles.overlayImage2}
+                        src={overlay2[index]}
+                        alt=""
+                        width={500}
+                        height={500}
+                        sizes="288px"
+                      />
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <FloatingParticles />
+        {!isMobile && <FloatingParticles isActive={isInViewport} />}
       </div>
 
       <div className={styles.fix}></div>

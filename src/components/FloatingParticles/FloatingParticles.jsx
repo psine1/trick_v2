@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { gsap } from 'gsap';
 import styles from './FloatingParticles.module.css';
 
@@ -21,21 +21,34 @@ const generateRandomParticles = (count) => {
   }));
 };
 
-const Particle = ({ size, left, top, duration, zIndex, image }) => {
+const Particle = ({ size, left, top, duration, zIndex, image, isActive }) => {
   const particleRef = useRef(null);
+  const tweenRef = useRef(null);
 
   useLayoutEffect(() => {
-    const tween = gsap.to(particleRef.current, {
+    tweenRef.current = gsap.to(particleRef.current, {
       y: particleRandom, 
       x: particleRandom,
       repeat: -1,
       yoyo: true,
       ease: 'power1.inOut',
       duration: duration,
+      paused: true,
     });
 
-    return () => tween.kill();
+    return () => {
+      tweenRef.current?.kill();
+      tweenRef.current = null;
+    };
   }, [duration]);
+
+  useEffect(() => {
+    if (isActive) {
+      tweenRef.current?.play();
+    } else {
+      tweenRef.current?.pause();
+    }
+  }, [isActive]);
 
   return (
     <div
@@ -55,13 +68,13 @@ const Particle = ({ size, left, top, duration, zIndex, image }) => {
   );
 };
 
-const FloatingParticles = () => {
+const FloatingParticles = ({ isActive = true }) => {
   const particles = useMemo(() => generateRandomParticles(8), []);
 
   return (
     <div className={styles.particlesContainer}>
       {particles.map((particle, index) => (
-        <Particle key={index} {...particle} />
+        <Particle key={index} {...particle} isActive={isActive} />
       ))}
     </div>
   );

@@ -1,10 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
-import { gsap } from 'gsap';
-import { Observer } from 'gsap/Observer';
 import styles from './LogoSlider.module.css';
-
-gsap.registerPlugin(Observer);
+import useInViewport from '@/hooks/useInViewport';
 
 const images = [
   '/images/logos/logo1.png',
@@ -26,9 +23,15 @@ const images = [
   ];
 
 const LogoSlider = () => {
+  const containerRef = useRef(null);
+  const isInViewport = useInViewport(containerRef);
 
   return (
-    <div className={` ${styles.scrollContainer} relative grid h-32 w-full  overflow-x-hidden whitespace-nowrap border-b border-white`}>
+    <div
+      ref={containerRef}
+      data-paused={!isInViewport}
+      className={` ${styles.scrollContainer} relative grid h-32 w-full  overflow-x-hidden whitespace-nowrap border-b border-white`}
+    >
 
     <div data-first className={`${styles.scroll} flex w-full justify-around items-center gap-16 whitespace-nowrap px-4`}>
   {images.map((src, index) => (

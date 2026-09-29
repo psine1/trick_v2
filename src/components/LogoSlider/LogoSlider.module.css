@@ -44,6 +44,10 @@
 
   }
 
+  .scrollContainer[data-paused='true'] .scroll {
+    animation-play-state: paused;
+  }
+
   .fade {
     background: linear-gradient(
       90deg,
